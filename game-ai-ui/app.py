@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO
-from fileOps import readFile, writeFile, runFile
+from fileOps import readFile, writeFile, runFile, createUserEnv
 
 app = Flask(__name__)
 #app.config['SECRET_KEY'] = 'yugendra'
@@ -10,18 +10,30 @@ socketio = SocketIO(app)
 def index():
     return render_template('index.html')
 
-@app.route('/getFile')
+@app.route('/playArea', methods=["POST"])
+def login():
+    print request.form
+    user = request.form['user']
+    createUserEnv(user)
+    resp = make_response(render_template('playArea.html'))
+    resp.set_cookie('userID', user)
+    return resp
+
+@app.route('/getFile', methods=["POST"])
 def getFile():
-    return readFile()
+    user = request.cookies['userID']
+    return readFile(user)
     
 @app.route('/saveFile', methods=["POST"])
 def saveFile():
-    writeFile(request.form['data'])
+    user = request.cookies['userID']
+    writeFile(user, request.form['data'])
     return 'True'
     
 @app.route('/run', methods=["POST"])
 def run():
-    result = runFile()
+    user = request.cookies['userID']
+    result = runFile(user)
     return result
 
 

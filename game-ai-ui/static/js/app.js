@@ -1,12 +1,12 @@
 $(document).ready(function(){
     $.ajax({
-     type: "GET",
-     url: '/getFile',
-     
-     success: function(data) {
-        document.getElementById("file").value = data;
-    }
+            type: "POST",
+            url: "/getFile",
+            success: function(response) {
+                document.getElementById("file").value = response;   
+            }
     });
+    
     
     $("#save").click(function() {
         var code = $("#file").val();
@@ -28,6 +28,21 @@ $(document).ready(function(){
             success: function(data) {
             document.getElementById("output").value = data;
         }
+        });
+    });
+    
+    $("#user1").click(function() {
+        var data = {'user': 'user1'}
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            dataType: 'json',
+            data: data,
+            success: function(response) {
+                console.log("test")
+                console.log(response)
+                document.body = response;
+            }
         });
     });
 })
