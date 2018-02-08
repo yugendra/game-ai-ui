@@ -20,4 +20,4 @@ def runFile(user):
     return stdout
     
 def createUserEnv(user):
-    subprocess.Popen(['cp', '-f', script_dir + '/files/code.py', script_dir + '/files/' + user + '.py'], stdout=subprocess.PIPE)
+    subprocess.Popen(['cp', '-n', script_dir + '/files/code.py', script_dir + '/files/' + user + '.py'], stdout=subprocess.PIPE)
