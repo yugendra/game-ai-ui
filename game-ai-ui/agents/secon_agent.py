@@ -1,7 +1,7 @@
 import gym
 import universe  # register the universe environments
 
-env = gym.make('flashgames.DuskRacers-v0')
+env = gym.make('flashgames.DuskDrive-v0')
 env.configure(remotes="vnc://localhost:5900+15900")  # automatically creates a local docker container
 observation_n = env.reset()
 
