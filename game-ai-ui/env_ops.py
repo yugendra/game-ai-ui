@@ -24,9 +24,9 @@ def create_env(user):
         container_id = client.create_container(env_image, name=user, detach=True, host_config=host_config)
 
         client.start(container_id['Id'])
-        return container_id['Id']
+        return vnc_port, info_channel
     except:
-        return False
+        return False, False
 
 
 def remove_env(user):
@@ -37,4 +37,11 @@ def remove_env(user):
     except:
         return False
 
-print create_env('yugendra')
+def is_env_running(user):
+    client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+    try:
+        container = client.containers.get(user)
+        return True
+    except:
+        return False
+
