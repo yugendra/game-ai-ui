@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, jsonify
 from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
-from env_ops import create_env, remove_env, is_env_running
+from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk
 from subprocess import Popen
 from agent_ops import is_agent_running, start_agent, stop_agent
 from time import sleep
@@ -13,6 +13,22 @@ socketio = SocketIO(app)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@app.route('/get_env_list', methods=['POST'])
+def env_list():
+    env_list = get_env_list()
+    print env_list
+    return jsonify(env_list)
+
+@app.route('/remove_envs', methods=['POST'])
+def remove_env():
+    envs = request.json['data']
+    remove_env_in_bulk(envs)
+    return render_template('admin.html')
 
 @app.route('/playArea', methods=["POST"])
 def login():

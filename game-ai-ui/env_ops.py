@@ -37,6 +37,14 @@ def remove_env(user):
     except:
         return False
 
+def remove_env_in_bulk(users):
+    try:
+        for user in users:
+            remove_env(user)
+        return True
+    except:
+        return False
+
 def is_env_running(user):
     client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     try:
@@ -44,4 +52,12 @@ def is_env_running(user):
         return True
     except:
         return False
+
+def get_env_list():
+    container_names = []
+    client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+    containers = client.containers.list()
+    for c in containers:
+        container_names.append(c.name)
+    return container_names
 
