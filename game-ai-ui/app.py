@@ -36,14 +36,17 @@ def saveFile():
     
 @app.route('/run', methods=["POST"])
 def run():
-    if request.cookies['userID']:
+    try:
         user = request.cookies['userID']
-    else:
-        return "500: Internal Server Error."
+    except:
+        return False
 
-    if request.cookies['PID']: pid = request.cookies['PID']
+    try:
+        pid = request.cookies['PID']
+    except:
+        pid = None
     
-    if is_agent_running(int(pid)): stop_agent(int(pid))
+    if is_agent_running(pid): stop_agent(pid)
     if is_env_running(user):
         remove_env(user)
         sleep(2)

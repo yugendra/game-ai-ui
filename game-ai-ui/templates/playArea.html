@@ -4,11 +4,22 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script src="static/js/app.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/app.css">
 </head>
 <body>
-    <textarea rows="20" cols="50" id='file'></textarea>
-    <button type="button" id='save'>Save</button> 
-    <button type="button" id='run'>Run</button> 
-    <textarea rows="20" cols="50" id='output'></textarea>
+    <div class="jumbotron">
+        <h1>ML Platform</h1>
+    </div>
+    <div class="container">
+    <div class ="col-md-7">
+        <textarea class="textarea" id='file'></textarea>
+    </div>
+    <div class ="col-md-3">
+        <button type="button" id='save'>Save</button> 
+        <button type="button" id='run'>Run</button> 
+        <button type="button" id='logout'>Logout</button>
+    </div>
+    </div>
 </body>
 </html>
