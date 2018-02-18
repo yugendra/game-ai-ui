@@ -1,0 +1,10 @@
+[Unit]
+Description=ML Platform
+
+[Service]
+WorkingDirectory=/opt/game-ai-ui/game-ai-ui
+ExecStart=/usr/bin/python app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
