@@ -60,4 +60,3 @@ def get_env_list():
     for c in containers:
         container_names.append(c.name)
     return container_names
-

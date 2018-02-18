@@ -30,7 +30,8 @@ $(document).ready(function(){
                 var port = !!info_channel_cookie ? info_channel_cookie[1] : null;
                 url = 'http://' + document.domain + ':' + port
                 window.open(url);
-            }
+            },
+            async: false
         });
     })
     

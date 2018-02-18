@@ -3,6 +3,7 @@ $(document).ready(function(){
             type: "POST",
             url: "/get_env_list",
             success: function(response) {
+                console.log(response);
                 create_checklist(response);
             }
     });

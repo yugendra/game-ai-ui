@@ -25,7 +25,7 @@ def env_list():
     return jsonify(env_list)
 
 @app.route('/remove_envs', methods=['POST'])
-def remove_env():
+def remove_envs():
     envs = request.json['data']
     remove_env_in_bulk(envs)
     return render_template('admin.html')
