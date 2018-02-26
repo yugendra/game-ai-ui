@@ -62,14 +62,14 @@ def run():
     except:
         pid = None
     
-    if is_agent_running(pid): stop_agent(pid)
+    #if is_agent_running(pid): stop_agent(pid)
     if is_env_running(user):
         remove_env(user)
         sleep(2)
     
     vnc_port, info_channel = create_env(user)
     sleep(2)
-    pid = start_agent(user, vnc_port, info_channel)
+    #pid = start_agent(user, vnc_port, info_channel)
     
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('vnc_port', str(vnc_port))

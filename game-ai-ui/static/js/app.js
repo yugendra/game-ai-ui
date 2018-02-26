@@ -26,9 +26,9 @@ $(document).ready(function(){
             type: "POST",
             url: "/run",
             success: function(response) {
-                var info_channel_cookie = document.cookie.match(new RegExp('info_channel=([^;]+)'));
-                var port = !!info_channel_cookie ? info_channel_cookie[1] : null;
-                url = 'http://' + document.domain + ':' + port
+                var vnc_port_cookie = document.cookie.match(new RegExp('vnc_port=([^;]+)'));
+                var port = !!vnc_port_cookie ? vnc_port_cookie[1] : null;
+                url = 'http://' + document.domain + ':' + port + '/vnc_auto.html'
                 window.open(url);
             },
             async: false

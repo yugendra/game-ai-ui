@@ -1,27 +1,32 @@
 import docker
 from helper import get_port
-
+import os
 
 def create_env(user):
     vnc_port, info_channel = get_port()
+    script_dir = os.path.dirname(os.path.realpath(__file__))
 
     if not vnc_port or not info_channel:
         return False
 
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
-        env_image = 'quay.io/openai/universe.flashgames:0.20.28'
+        env_image = 'yugendra/gym'
+        cmd = 'python /root/gym_examples/agent.py'
+        volume = script_dir + '/user_agents/' + user
         host_config = client.create_host_config(
             port_bindings={
-                5900: vnc_port,
-                15900: info_channel
+                6081 : vnc_port
             },
             privileged=True,
             ipc_mode='host',
-            auto_remove=True
+            auto_remove=True,
+            binds=[
+                volume  + ':/root/gym_examples'
+            ]
         )
 
-        container_id = client.create_container(env_image, name=user, detach=True, host_config=host_config)
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[6081], volumes=['/root/gym_examples'], host_config=host_config, command=cmd)
 
         client.start(container_id['Id'])
         return vnc_port, info_channel
@@ -60,3 +65,4 @@ def get_env_list():
     for c in containers:
         container_names.append(c.name)
     return container_names
+
