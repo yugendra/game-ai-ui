@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response, jsonify
 from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
-from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk
+from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port
 from subprocess import Popen
 from agent_ops import is_agent_running, start_agent, stop_agent
 from time import sleep
@@ -34,9 +34,11 @@ def remove_envs():
 def login():
     print request.form
     user = request.form['user']
+    vnc_port = get_vnc_port(user)
     createUserEnv(user)
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('userID', user)
+    resp.set_cookie('vnc_port', vnc_port)
     return resp
 
 @app.route('/getFile', methods=["POST"])

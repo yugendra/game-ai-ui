@@ -1,8 +1,18 @@
 .textarea{
-    height: 500px;
+    height: 800px;
     width: 100%;
 }
 
 .jumbotron{
     padding: 10px !important;
+}
+
+.vnc_frame{
+    display: block;
+    width: 100%;
+    height: 800px;
+}
+
+.container{
+    width: 100% !important;
 }

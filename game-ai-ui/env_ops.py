@@ -66,3 +66,6 @@ def get_env_list():
         container_names.append(c.name)
     return container_names
 
+def get_vnc_port(user):
+    client = docker.APIClient(base_url='unix://var/run/docker.sock')
+    return client.inspect_container('user1')['NetworkSettings']['Ports']['6081/tcp'][0]['HostPort']
