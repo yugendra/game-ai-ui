@@ -12,7 +12,7 @@ def create_env(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         env_image = 'yugendra/gym'
-        cmd = 'python /root/gym_examples/agent.py'
+        cmd = [ "/bin/sh", "-c", "python /root/gym_examples/agent.py > /root/gym_examples/agent_log 2>&1" ]
         volume = script_dir + '/user_agents/' + user
         host_config = client.create_host_config(
             port_bindings={
