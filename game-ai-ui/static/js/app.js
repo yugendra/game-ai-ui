@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     loadFrame()
-    dumpLogs()
+    //dumpLogs()
 
     $.ajax({
             type: "POST",

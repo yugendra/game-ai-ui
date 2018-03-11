@@ -83,22 +83,17 @@ def run():
 
 @app.route('/getLog', methods=["POST"])
 def getLog():
-    try:
-        user = request.cookies['userID']
-        
-        with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
-            loglines = get_last_log(f)
-        return loglines
-    except:
-        return "</br>Can not open log file"
+    user = request.cookies['userID']
+    loglines = get_last_log(user)
+    return loglines
 
 @socketio.on('connect', namespace='/getlogs')
 def connect():
     global log_thread
+    user = request.cookies['userID']
     print "Client connected"
     if not log_thread.isAlive():
-        logfile = "/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log"
-        log_thread = LogReader(socketio, logfile)
+        log_thread = LogReader(socketio, user)
         log_thread.start()
 
 @socketio.on('disconnect', namespace='/getlogs')

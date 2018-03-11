@@ -1,4 +1,14 @@
-def get_last_log(f, lines=20):
+import os
+
+def get_last_log(user, lines=20):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    log_file = script_dir + '/user_agents/' + user + '/agent_log'
+
+    try:
+        f = open(log_file)
+    except:
+        return "</br>Can not open log file"
+
     total_lines_wanted = lines
 
     BLOCK_SIZE = 1024

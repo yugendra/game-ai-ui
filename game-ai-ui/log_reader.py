@@ -6,11 +6,13 @@ class LogReader(Thread):
     """
         Implements the logic to send day0 and day1 workflow's log to client.
     """
-    def __init__(self, socketio, logfile):
+    def __init__(self, socketio, user):
         self.delay = 1
         super(LogReader, self).__init__()
         self.socketio = socketio
-        self.logfile = logfile
+        self.user = user
+        self.script_dir = os.path.dirname(os.path.realpath(__file__))
+        self.logfile = self.script_dir + '/user_agents/' + self.user + '/agent_log'
 
     def tailf(self):
         """
