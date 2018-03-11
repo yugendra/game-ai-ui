@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
     loadFrame()
+    dumpLogs()
 
     $.ajax({
             type: "POST",
@@ -30,8 +31,19 @@ $(document).ready(function(){
             url: "/run",
             success: function(response) {
                 loadFrame();
+                //dumpLogs();
             },
             async: false
+        });
+    })
+
+    $("#getlastlog").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/getLog",
+            success: function(response) {
+                $('#log').append(response);
+            }
         });
     })
     
@@ -57,4 +69,13 @@ function loadFrame() {
     url = 'http://' + document.domain + ':' + port + '/vnc_auto.html'
     console.log(url)
     document.getElementById('vnc_frame').src = url
+}
+
+function dumpLogs() {
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/getlogs');
+    socket.on('newline', function(line_received) {
+        line_print = '<p>' + line_received + '<p>';
+        $('#log').append(line_print);
+        document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
+    });
 }

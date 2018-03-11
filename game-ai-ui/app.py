@@ -5,10 +5,14 @@ from env_ops import create_env, remove_env, is_env_running, get_env_list, remove
 from subprocess import Popen
 from agent_ops import is_agent_running, start_agent, stop_agent
 from time import sleep
+from log_reader import LogReader
+from threading import Thread
+from get_last_log import get_last_log
 
 app = Flask(__name__)
 #app.config['SECRET_KEY'] = 'yugendra'
 socketio = SocketIO(app)
+log_thread = Thread()
 
 @app.route('/')
 def index():
@@ -21,7 +25,6 @@ def admin():
 @app.route('/get_env_list', methods=['POST'])
 def env_list():
     env_list = get_env_list()
-    print env_list
     return jsonify(env_list)
 
 @app.route('/remove_envs', methods=['POST'])
@@ -32,7 +35,6 @@ def remove_envs():
 
 @app.route('/playArea', methods=["POST"])
 def login():
-    print request.form
     user = request.form['user']
     vnc_port = get_vnc_port(user)
     createUserEnv(user)
@@ -80,6 +82,28 @@ def run():
     
     return resp
 
+@app.route('/getLog', methods=["POST"])
+def getLog():
+    with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
+        loglines = get_last_log(f)
+    return loglines
+
+@socketio.on('connect', namespace='/getlogs')
+def connect():
+    global log_thread
+    print "Client connected"
+    if not log_thread.isAlive():
+        logfile = "/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log"
+        log_thread = LogReader(socketio, logfile)
+        log_thread.start()
+
+@socketio.on('disconnect', namespace='/getlogs')
+def disconnect():
+    """
+        Operations after client disconnect. 
+    """
+    #TODO: detect if client is closed
+    print('Client disconnected')
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0')
