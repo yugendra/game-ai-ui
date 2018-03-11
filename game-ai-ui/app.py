@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, make_response, jsonify
-from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
 from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port
 from subprocess import Popen
@@ -10,7 +9,6 @@ from threading import Thread
 from get_last_log import get_last_log
 
 app = Flask(__name__)
-#app.config['SECRET_KEY'] = 'yugendra'
 socketio = SocketIO(app)
 log_thread = Thread()
 
@@ -106,4 +104,4 @@ def disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000)
