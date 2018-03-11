@@ -28,12 +28,17 @@ class LogReader(Thread):
                 if not line:
                     sleep(1)    # Sleep briefly
                     continue
+                sleep(1)
                 yield line
 
-        thefile = open(self.logfile)
-        loglines = follow(thefile)
-        for line in loglines:
-            self.socketio.emit('newline', line, namespace='/getlogs')
+        try:
+            thefile = open(self.logfile)
+            loglines = follow(thefile)
+            for line in loglines:
+                self.socketio.emit('newline', line, namespace='/getlogs')
+        except:
+            self.socketio.emit('newline', "Can not open log file", namespace='/getlogs')
+            sleep(1)
 
     def run(self):
         """

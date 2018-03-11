@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, make_response, jsonify
+from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
 from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port
 from subprocess import Popen
@@ -82,9 +83,14 @@ def run():
 
 @app.route('/getLog', methods=["POST"])
 def getLog():
-    with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
-        loglines = get_last_log(f)
-    return loglines
+    try:
+        user = request.cookies['userID']
+        
+        with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
+            loglines = get_last_log(f)
+        return loglines
+    except:
+        return "</br>Can not open log file"
 
 @socketio.on('connect', namespace='/getlogs')
 def connect():
@@ -104,4 +110,4 @@ def disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    socketio.run(app, host='0.0.0.0')
