@@ -11,7 +11,7 @@ from get_last_log import get_last_log
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-log_thread = Thread()
+#log_thread = Thread()
 
 @app.route('/')
 def index():
@@ -89,7 +89,8 @@ def getLog():
 
 @socketio.on('connect', namespace='/getlogs')
 def connect():
-    global log_thread
+    #global log_thread
+    log_thread = Thread()
     user = request.cookies['userID']
     print "Client connected"
     if not log_thread.isAlive():

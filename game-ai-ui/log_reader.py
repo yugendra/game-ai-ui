@@ -37,7 +37,7 @@ class LogReader(Thread):
             thefile = open(self.logfile)
             loglines = follow(thefile)
             for line in loglines:
-                self.socketio.emit('newline', line, namespace='/getlogs')
+                self.socketio.emit(self.user, line, namespace='/getlogs')
         except:
             self.socketio.emit('newline', "Can not open log file", namespace='/getlogs')
             sleep(1)

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     loadFrame()
-    //dumpLogs()
+    dumpLogs()
 
     $.ajax({
             type: "POST",
@@ -73,7 +73,9 @@ function loadFrame() {
 
 function dumpLogs() {
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/getlogs');
-    socket.on('newline', function(line_received) {
+    var user_name_cookie = document.cookie.match(new RegExp('userID=([^;]+)'));
+    var user_name = !!user_name_cookie ? user_name_cookie[1] : null;
+    socket.on(user_name, function(line_received) {
         line_print = '<p>' + line_received + '<p>';
         $('#log').append(line_print);
         document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
