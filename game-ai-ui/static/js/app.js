@@ -43,6 +43,7 @@ $(document).ready(function(){
             url: "/getLog",
             success: function(response) {
                 $('#log').append(response);
+                dumpLogs();
             }
         });
     })
