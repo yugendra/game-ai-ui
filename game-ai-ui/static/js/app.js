@@ -68,6 +68,10 @@ $(document).ready(function(){
             },
         });
     });
+    
+    $("#clear").click(function() {
+        $('#log').html("");
+    });
 })
 
 function loadFrame() {
