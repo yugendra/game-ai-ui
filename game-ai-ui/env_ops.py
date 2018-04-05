@@ -2,7 +2,7 @@ import docker
 from helper import get_port
 import os
 
-def create_env(user):
+def create_env(user, language="python3"):
     vnc_port, info_channel = get_port()
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -12,7 +12,7 @@ def create_env(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         env_image = 'yugendra/gym'
-        cmd = [ "/bin/sh", "-c", "python /root/gym_examples/agent.py > /root/gym_examples/agent_log 2>&1" ]
+        cmd = [ "/bin/sh", "-c", language + " /root/gym_examples/agent.py > /root/gym_examples/agent_log 2>&1" ]
         volume = script_dir + '/user_agents/' + user
         host_config = client.create_host_config(
             port_bindings={
@@ -69,6 +69,7 @@ def get_env_list():
 def get_vnc_port(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
-        return client.inspect_container('user1')['NetworkSettings']['Ports']['6081/tcp'][0]['HostPort']
+        return client.inspect_container(user)['NetworkSettings']['Ports']['6081/tcp'][0]['HostPort']
     except:
         return "0"
+

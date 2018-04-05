@@ -26,14 +26,19 @@ $(document).ready(function(){
     });
     
     $("#run").click(function() {
+        var language = $("#language").val();
+        var data = {'language': language};
         $.ajax({
             type: "POST",
             url: "/run",
+            dataType: 'json',
+            data: data,
             success: function(response) {
                 loadFrame();
-                //dumpLogs();
             },
-            async: false
+            error: function(response) {
+                loadFrame();
+            }
         });
     })
 
@@ -56,10 +61,11 @@ $(document).ready(function(){
             dataType: 'json',
             data: data,
             success: function(response) {
-                console.log("test")
-                console.log(response)
+                console.log("test");
                 document.body = response;
-            }
+                console.log("test2");
+                $('#log').append("test2");
+            },
         });
     });
 })

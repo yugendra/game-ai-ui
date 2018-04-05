@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, jsonify
+from flask import Flask, render_template, request, make_response, jsonify, Response
 from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
 from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port
@@ -55,6 +55,7 @@ def saveFile():
     
 @app.route('/run', methods=["POST"])
 def run():
+    language = request.form['language']
     try:
         user = request.cookies['userID']
     except:
@@ -70,7 +71,7 @@ def run():
         remove_env(user)
         sleep(2)
     
-    vnc_port, info_channel = create_env(user)
+    vnc_port, info_channel = create_env(user, language=language)
     sleep(2)
     #pid = start_agent(user, vnc_port, info_channel)
     
