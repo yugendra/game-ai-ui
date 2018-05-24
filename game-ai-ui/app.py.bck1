@@ -13,15 +13,10 @@ from flask import Flask, url_for, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from instagram import getfollowedby, getname
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
-
-socketio = SocketIO(app)
-#log_thread = Thread()
-
-
-
 
 class User(db.Model):
         """ Create user table"""
@@ -33,18 +28,21 @@ class User(db.Model):
                 self.username = username
                 self.password = password
 
+socketio = SocketIO(app)
+#log_thread = Thread()
+
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
         """ Session control"""
         if not session.get('logged_in'):
-                print("=====================section 1 ========================")
+                print(request.json)
                 return render_template('index.html')
         else:
                 if request.method == 'POST':
-                        print("=====================section 2 ========================")
+                        print(request.json)
                         username = getname(request.form['username'])
                         return render_template('index.html', data=getfollowedby(username))
-                print("=====================section 3 ========================")
                 return render_template('index.html')
 
 
@@ -59,19 +57,9 @@ def login():
                 try:
                         data = User.query.filter_by(username=name, password=passw).first()
                         if data is not None:
+                                print "################################Logging in################"
                                 session['logged_in'] = True
-                                user = request.form['username']
-                                vnc_port = get_vnc_port(user)
-                                ssh_port = get_host_ssh_port(user)
-                                createUserEnv(user)
-                                resp = make_response(render_template('playArea.html'))
-                                resp.set_cookie('userID', user)
-                                resp.set_cookie('vnc_port', vnc_port)
-                                resp.set_cookie('ssh_port', ssh_port)
-                                print(resp)
-                                return resp
-
-                                #return redirect(url_for('home'))
+                                return redirect(url_for('home'))
                         else:
                                 return 'Dont Login'
                 except:
@@ -114,8 +102,8 @@ def remove_envs():
     return render_template('admin.html')
 
 @app.route('/playArea', methods=["POST"])
-def playArea():
-    user = request.form['username']
+def playarea():
+    user = request.form['user']
     vnc_port = get_vnc_port(user)
     ssh_port = get_host_ssh_port(user)
     createUserEnv(user)
@@ -142,27 +130,23 @@ def run():
     print(projectname)
     try:
         user = request.cookies['userID']
-        print(user)
     except:
         return False
 
     try:
         pid = request.cookies['PID']
-        print(pid)
     except:
         pid = None
 
     #if is_agent_running(pid): stop_agent(pid)
     if is_env_running(user):
-        print("env already running!")
         remove_env(user)
         sleep(2)
 
     vnc_port, info_channel ,ssh_port= create_env(user, projectname=projectname)
-    print("env created.")
     sleep(2)
     #pid = start_agent(user, vnc_port, info_channel)
-    print("sending resp back")
+
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('vnc_port', str(vnc_port))
     resp.set_cookie('ssh_port', str(ssh_port))
@@ -196,8 +180,7 @@ def disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    app.debug = True
     db.create_all()
-    app.secret_key = "123"
+    socketio.secret_key = "123"
     socketio.run(app, host='0.0.0.0',debug=True)
 

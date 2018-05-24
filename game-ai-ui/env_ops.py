@@ -89,4 +89,3 @@ def get_host_ssh_port(user):
         return client.inspect_container(user)['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
     except:
         return "0"
-
