@@ -14,14 +14,8 @@ def create_env(user,projectname):
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         env_image = 'yugendra/ssh'
         language = "python3"
-        cmd = [ "/bin/sh", "-c","service ssh start && tail -F /root/projectdata/agent_log" ]
-        if projectname == "R":
-            volume1 = script_dir + '/user_agents/' + user + '/rdata'
-        if projectname == 'sentimentalnalysis':
-            volume1 = script_dir + '/user_agents/' + user + '/moviereviewdata'
-        if projectname == 'antivirus':
-            volume1 = script_dir + '/user_agents/' + user + '/antivirusdata'
-        volume2 = script_dir + '/DeepLearningMovies/' 
+        cmd = [ "/bin/sh", "-c", language + " /root/gym_examples/agent.py > /root/gym_examples/agent_log 2>&1" ,"&&" , "service ssh start" ]
+        volume = script_dir + '/user_agents/' + user
         host_config = client.create_host_config(
             port_bindings={
                 6081 : vnc_port,
@@ -31,17 +25,16 @@ def create_env(user,projectname):
             ipc_mode='host',
             auto_remove=True,
             binds=[
-                volume1  + ':/root/projectdata',
-                volume2  + ':/root/SentimentalAnalysis'
+                volume  + ':/root/gym_examples'
             ]
         )
 
-        container_id = client.create_container(env_image, name=user, detach=True, ports=[6081,22,80], volumes=['/root/projectdata','/root/SentimentalAnalysis'], host_config=host_config, command=cmd)
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[6081], volumes=['/root/gym_examples'], host_config=host_config, command=cmd)
 
         client.start(container_id['Id'])
-        return vnc_port, info_channel, ssh_port
+        return vnc_port, info_channel
     except:
-        return False, False, False
+        return False, False
 
 
 def remove_env(user):
@@ -82,11 +75,3 @@ def get_vnc_port(user):
         return client.inspect_container(user)['NetworkSettings']['Ports']['6081/tcp'][0]['HostPort']
     except:
         return "0"
-
-def get_host_ssh_port(user):
-    try:
-        client = docker.APIClient(base_url='unix://var/run/docker.sock')
-        return client.inspect_container(user)['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
-    except:
-        return "0"
-

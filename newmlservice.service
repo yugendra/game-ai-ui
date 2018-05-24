@@ -1,8 +1,8 @@
 [Unit]
-Description=ML Platform
+Description=ML Platform new
 
 [Service]
-WorkingDirectory=/opt/replica/game-ai-ui/game-ai-ui
+WorkingDirectory=/opt/test/game-ai-ui/game-ai-ui
 ExecStart=/usr/bin/python app.py
 Restart=always
 

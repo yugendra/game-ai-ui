@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response, jsonify, Response
 from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
-from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port
+from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port, get_host_ssh_port
 from subprocess import Popen
 from agent_ops import is_agent_running, start_agent, stop_agent
 from time import sleep
@@ -16,6 +16,9 @@ socketio = SocketIO(app)
 @app.route('/')
 def index():
     return render_template('index.html')
+@app.route('/nocontainer')
+def nocontainer():
+    return render_template('nocontainer.html')
 
 @app.route('/admin')
 def admin():
@@ -36,10 +39,12 @@ def remove_envs():
 def login():
     user = request.form['user']
     vnc_port = get_vnc_port(user)
+    ssh_port = get_host_ssh_port(user)
     createUserEnv(user)
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('userID', user)
     resp.set_cookie('vnc_port', vnc_port)
+    resp.set_cookie('ssh_port', ssh_port)
     return resp
 
 @app.route('/getFile', methods=["POST"])
@@ -55,7 +60,8 @@ def saveFile():
     
 @app.route('/run', methods=["POST"])
 def run():
-    language = request.form['language']
+    projectname=request.form['projectname']
+    print(projectname)
     try:
         user = request.cookies['userID']
     except:
@@ -71,12 +77,13 @@ def run():
         remove_env(user)
         sleep(2)
     
-    vnc_port, info_channel = create_env(user, language=language)
+    vnc_port, info_channel ,ssh_port= create_env(user, projectname=projectname)
     sleep(2)
     #pid = start_agent(user, vnc_port, info_channel)
     
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('vnc_port', str(vnc_port))
+    resp.set_cookie('ssh_port', str(ssh_port))
     resp.set_cookie('info_channel', str(info_channel))
     resp.set_cookie('PID', str(pid))
     
@@ -107,4 +114,4 @@ def disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
+    socketio.run(app, host='0.0.0.0',debug=True)

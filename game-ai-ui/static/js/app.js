@@ -1,17 +1,11 @@
 $(document).ready(function(){
 
-    loadFrame()
-    dumpLogs()
+    //loadFrame()
+    //dumpLogs()
+    url = 'http://' + document.domain + ':' + location.port + '/nocontainer'
+    var link= document.getElementById('vnc_frame_src'); 
+    link.href = url
 
-    $.ajax({
-            type: "POST",
-            url: "/getFile",
-            success: function(response) {
-                document.getElementById("file").value = response;   
-            }
-    });
-    
-    
     $("#save").click(function() {
         var code = $("#file").val();
         var data = {'data': code};
@@ -26,8 +20,9 @@ $(document).ready(function(){
     });
     
     $("#run").click(function() {
-        var language = $("#language").val();
-        var data = {'language': language};
+        
+        var projectname=   $("input[name='projectname']:checked").val();
+        var data = {'projectname': projectname };
         $.ajax({
             type: "POST",
             url: "/run",
@@ -79,7 +74,17 @@ function loadFrame() {
     var port = !!vnc_port_cookie ? vnc_port_cookie[1] : null;
     url = 'http://' + document.domain + ':' + port + '/vnc_auto.html'
     console.log(url)
-    document.getElementById('vnc_frame').src = url
+    var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
+    link.href = url
+    window.open(url, '_blank');
+ 
+    var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));
+    var ssh_port = !!ssh_port_cookie ? ssh_port_cookie[1] : null;
+    console.log(ssh_port)
+    
+    var command= document.getElementById('ssh_command');
+    command.innerHTML = "ssh -p " + ssh_port + " root@" + document.domain
+    //document.getElementById('vnc_frame').src = url
 }
 
 function dumpLogs() {

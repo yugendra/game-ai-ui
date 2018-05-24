@@ -13,21 +13,24 @@
     </div>
     <div class="container">
     <div class ="col-md-4">
-        <textarea class="textarea" id='file'></textarea>
+            <div id="projectname">            
+               <input type="radio" name="projectname" value="R" checked="checked"> R programming<br>
+               <input type="radio" name="projectname" value="sentimentalanalysis"> Movie review Analysis<br>
+               <input type="radio" name="projectname" value="antivirus"> Antivirus Demo<br>
+            </div>
+            <div>
+            <p> 
+                <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
+            </p>
+            <p id="ssh_command">
+                
+            </p>
+            </div>
+
     </div>
     <div class ="col-md-1">
-        <div>
-            <select id='language'>
-                <option value="python">Python</option>
-                <option value="python3">Python3</option>
-            </select>
-        </div></br>
-        <div><button type="button" id='save'>Save</button> </div></br>
         <div><button type="button" id='run'>Run</button></div></br>
         <div><button type="button" id='getlastlog'>Logs</button></div>
-    </div>
-    <div class ="col-md-7">
-        <iframe class="vnc_frame" id='vnc_frame'></iframe>
     </div>
     </div>
     <div class="container">
