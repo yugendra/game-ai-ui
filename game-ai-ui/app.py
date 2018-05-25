@@ -1,7 +1,9 @@
+import MySQLdb
+import MySQLdb.cursors
 from flask import Flask, render_template, request, make_response, jsonify, Response
 from flask_socketio import SocketIO
 from fileOps import readFile, writeFile, runFile, createUserEnv
-from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port, get_host_ssh_port
+from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port, get_host_ssh_port, execute_code
 from subprocess import Popen
 from agent_ops import is_agent_running, start_agent, stop_agent
 from time import sleep
@@ -14,24 +16,18 @@ from flask_sqlalchemy import SQLAlchemy
 from instagram import getfollowedby, getname
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
 
 socketio = SocketIO(app)
 #log_thread = Thread()
 
+database = MySQLdb.connect(host = "localhost", 
+	user = "root",
+	passwd = "devops123", 
+	db = "user_creds", 
+	cursorclass = MySQLdb.cursors.DictCursor)
+cursor = database.cursor()
 
 
-
-class User(db.Model):
-        """ Create user table"""
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True)
-        password = db.Column(db.String(80))
-
-        def __init__(self, username, password):
-                self.username = username
-                self.password = password
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -57,8 +53,11 @@ def login():
                 name = request.form['username']
                 passw = request.form['password']
                 try:
-                        data = User.query.filter_by(username=name, password=passw).first()
-                        if data is not None:
+                        cursor.execute("SELECT password FROM user_table WHERE username = '"+name+"';")
+                        data = cursor.fetchall()
+                        print(data[0]['password'])
+                        
+                        if data is not None and data[0]['password'] == passw:
                                 session['logged_in'] = True
                                 user = request.form['username']
                                 vnc_port = get_vnc_port(user)
@@ -81,9 +80,10 @@ def login():
 def register():
         """Register Form"""
         if request.method == 'POST':
-                new_user = User(username=request.form['username'], password=request.form['password'])
-                db.session.add(new_user)
-                db.session.commit()
+                user=request.form['username']
+                passwd=request.form['password']
+                
+                cursor.execute("INSERT INTO user_table (username, password, container_id, vnc_port, ssh_port, is_container_running) VALUES ('"+user+"', '"+passwd+"','null',0,0,'0');")
                 return render_template('login.html')
         return render_template('register.html')
 
@@ -155,6 +155,10 @@ def delete():
     print("sending delete resp back")
     resp = make_response(render_template('playArea.html'))
     resp.set_cookie('nocontainer', str("No container running now."))
+    ## Update user info
+    query = "update  user_creds.user_table SET container_id = '' , vnc_port = '' , ssh_port = '' , is_container_running = 0 where username = '"+user+"';"
+    print(query)
+    cursor.execute(query)
 
     return resp
 
@@ -165,8 +169,11 @@ def delete():
 def run():
     projectname=request.form['projectname']
     print(projectname)
+    print("reading cookies...."+str(request.cookies['userID']))
     try:
         user = request.cookies['userID']
+        #writeFile(user, request.form['data'])
+        print("file updated")
         print(user)
     except:
         return False
@@ -178,29 +185,45 @@ def run():
         pid = None
 
     #if is_agent_running(pid): stop_agent(pid)
+    
     if is_env_running(user):
         print("env already running!")
-        remove_env(user)
+        #remove_env(user)
+        writeFile(user, request.form['data'])
+        execute_code(user,projectname)
+        resp = make_response(render_template('playArea.html'))
+        return resp
+    else:
+        vnc_port, info_channel ,ssh_port, container_id= create_env(user, projectname=projectname)
+        print("env created.")
         sleep(2)
+        print("sending resp back")
+        resp = make_response(render_template('playArea.html'))
+        resp.set_cookie('vnc_port', str(vnc_port))
+        resp.set_cookie('ssh_port', str(ssh_port))
+        resp.set_cookie('info_channel', str(info_channel))
+        resp.set_cookie('PID', str(pid))
 
-    vnc_port, info_channel ,ssh_port= create_env(user, projectname=projectname)
-    print("env created.")
-    sleep(2)
-    #pid = start_agent(user, vnc_port, info_channel)
-    print("sending resp back")
-    resp = make_response(render_template('playArea.html'))
-    resp.set_cookie('vnc_port', str(vnc_port))
-    resp.set_cookie('ssh_port', str(ssh_port))
-    resp.set_cookie('info_channel', str(info_channel))
-    resp.set_cookie('PID', str(pid))
-
-    return resp
+        query = "update  user_creds.user_table SET container_id = '"+str(container_id)+"' , vnc_port = '"+str(vnc_port)+"' , ssh_port = '"+str(ssh_port)+"' , is_container_running = 1 where username = '"+user+"';"
+        print(query)
+        cursor.execute(query)
+        print(request.form['data'])
+        writeFile(user, request.form['data'])
+        execute_code(user,projectname)
+        return resp
 
 @app.route('/getLog', methods=["POST"])
 def getLog():
     user = request.cookies['userID']
     loglines = get_last_log(user)
     return loglines
+
+@app.route('/getcontainerLog', methods=["POST"])
+def getLog():
+    user = request.cookies['userID']
+    loglines = get_last_log(user)
+    return loglines
+
 
 @socketio.on('connect', namespace='/getlogs')
 def connect():
@@ -222,7 +245,6 @@ def disconnect():
 
 if __name__ == '__main__':
     app.debug = True
-    db.create_all()
     app.secret_key = "123"
     socketio.run(app, host='0.0.0.0',debug=True)
 

@@ -5,13 +5,13 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def readFile(user):
     lines = ''
-    with open(script_dir + '/user_agents/' + user + '/agent.py') as fp:
+    with open(script_dir + '/user_agents/' + user + '/rdata/script.R') as fp:
         for line in fp:
             lines = lines + line
     return lines
     
 def writeFile(user, data):
-    f = open(script_dir + '/user_agents/' + user + '/agent.py','w')
+    f = open(script_dir + '/user_agents/' + user + '/rdata/script.R','w')
     f.write(data)
     
 def runFile(user):

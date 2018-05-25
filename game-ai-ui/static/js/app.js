@@ -20,9 +20,10 @@ $(document).ready(function(){
     });
     
     $("#run").click(function() {
-        
+        var code = $("#file").val();
         var projectname=   $("input[name='projectname']:checked").val();
-        var data = {'projectname': projectname };
+        var data = {'projectname': projectname, 'data': code };
+        console.log(data)
         $.ajax({
             type: "POST",
             url: "/run",
@@ -104,6 +105,16 @@ function loadFrame() {
     var command= document.getElementById('ssh_command');
     command.innerHTML = "ssh -p " + ssh_port + " root@" + document.domain
     //document.getElementById('vnc_frame').src = url
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/getprogramlogs');
+    var user_name_cookie = document.cookie.match(new RegExp('userID=([^;]+)'));
+    var user_name = !!user_name_cookie ? user_name_cookie[1] : null;
+    socket.on(user_name, function(line_received) {
+        line_print = '<p>' + line_received + '<p>';
+        $('#log').append(line_print);
+        document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
+    });
+
 }
 
 function loadFrameAfterDelete() {

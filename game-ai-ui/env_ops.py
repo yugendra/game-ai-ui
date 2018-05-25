@@ -37,13 +37,19 @@ def create_env(user,projectname):
         )
 
         container_id = client.create_container(env_image, name=user, detach=True, ports=[6081,22,80], volumes=['/root/projectdata','/root/SentimentalAnalysis'], host_config=host_config, command=cmd)
-
+        print(container_id['Id'])
         client.start(container_id['Id'])
-        return vnc_port, info_channel, ssh_port
+        return vnc_port, info_channel, ssh_port, container_id['Id']
     except:
-        return False, False, False
+        return False, False, False, False
 
-
+def execute_code( user, projectname):
+     try:
+       if projectname == "R":
+           os.system('docker exec -ti '+user+' /bin/bash -c "Rscript /root/projectdata/script.R > /root/projectdata/exec.log"')
+     except:
+        return False
+          
 def remove_env(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
