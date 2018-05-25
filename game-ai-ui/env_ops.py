@@ -48,6 +48,7 @@ def remove_env(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         container_id  = client.stop(user)
+        print("running container deleted ")
         return True
     except:
         return False
@@ -89,3 +90,4 @@ def get_host_ssh_port(user):
         return client.inspect_container(user)['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
     except:
         return "0"
+

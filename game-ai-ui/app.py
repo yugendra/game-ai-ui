@@ -136,6 +136,31 @@ def saveFile():
     writeFile(user, request.form['data'])
     return 'True'
 
+
+@app.route('/delete', methods = ["POST"])
+def delete():
+    projectname=request.form['projectname']
+    print(projectname)
+    try:
+        user = request.cookies['userID']
+        print(user)
+    except:
+        return False
+
+    if is_env_running(user):
+        print("env already running!")
+        remove_env(user)
+        sleep(2)
+
+    print("sending delete resp back")
+    resp = make_response(render_template('playArea.html'))
+    resp.set_cookie('nocontainer', str("No container running now."))
+
+    return resp
+
+
+    
+
 @app.route('/run', methods=["POST"])
 def run():
     projectname=request.form['projectname']

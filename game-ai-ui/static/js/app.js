@@ -37,6 +37,25 @@ $(document).ready(function(){
         });
     })
 
+        $("#delete").click(function() {
+
+        var projectname=   $("input[name='projectname']:checked").val();
+        var data = {'projectname': projectname };
+        $.ajax({
+            type: "POST",
+            url: "/delete",
+            dataType: 'json',
+            data: data,
+            success: function(response) {
+                loadFrameAfterDelete();
+            },
+            error: function(response) {
+                loadFrameAfterDelete();
+            }
+        });
+    })
+
+
     $("#getlastlog").click(function() {
         $.ajax({
             type: "POST",
@@ -85,6 +104,14 @@ function loadFrame() {
     var command= document.getElementById('ssh_command');
     command.innerHTML = "ssh -p " + ssh_port + " root@" + document.domain
     //document.getElementById('vnc_frame').src = url
+}
+
+function loadFrameAfterDelete() {
+    var command= document.getElementById('ssh_command');
+    command.innerHTML = "Container Deleted."
+    var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
+    link.href = 'http://' + document.domain + ':' + location.port + '/nocontainer'
+
 }
 
 function dumpLogs() {
