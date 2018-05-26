@@ -2,7 +2,7 @@ import os
 
 def get_last_log(user, lines=20):
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    log_file = script_dir + '/user_agents/' + user + '/agent_log'
+    log_file = script_dir + '/user_agents/' + user + '/rdata/exec.log'
 
     try:
         f = open(log_file)
@@ -36,4 +36,5 @@ def get_last_log(user, lines=20):
     return '\n</br>'.join(all_read_text.splitlines()[-total_lines_wanted:])
 
 #with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
-    #print get_last_log(f)
+#fl=get_last_log('user1')
+#print(fl)

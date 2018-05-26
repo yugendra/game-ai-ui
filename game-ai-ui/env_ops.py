@@ -46,7 +46,7 @@ def create_env(user,projectname):
 def execute_code( user, projectname):
      try:
        if projectname == "R":
-           os.system('docker exec -ti '+user+' /bin/bash -c "Rscript /root/projectdata/script.R > /root/projectdata/exec.log"')
+           os.system('docker exec -ti '+user+' /bin/bash -c "Rscript /root/projectdata/script.R &> /root/projectdata/exec.log"')
      except:
         return False
           

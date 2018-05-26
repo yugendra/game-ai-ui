@@ -53,7 +53,7 @@ def login():
                 name = request.form['username']
                 passw = request.form['password']
                 try:
-                        cursor.execute("SELECT password FROM user_table WHERE username = '"+name+"';")
+                        cursor.execute("SELECT password FROM user_creds.user_table WHERE username = '"+name+"';")
                         data = cursor.fetchall()
                         print(data[0]['password'])
                         
@@ -82,8 +82,15 @@ def register():
         if request.method == 'POST':
                 user=request.form['username']
                 passwd=request.form['password']
-                
-                cursor.execute("INSERT INTO user_table (username, password, container_id, vnc_port, ssh_port, is_container_running) VALUES ('"+user+"', '"+passwd+"','null',0,0,'0');")
+                try:
+                   cursor.execute("INSERT INTO user_creds.user_table (username, password, container_id, vnc_port, ssh_port, is_container_running) VALUES ('"+user+"', '"+passwd+"','null',0,0,'0');")
+
+                   database.commit()
+                except:
+                   # Rollback in case there is any error
+                   database.rollback()
+                cursor.execute("select * from user_creds.user_table;")
+                print(cursor.fetchall())
                 return render_template('login.html')
         return render_template('register.html')
 
@@ -158,8 +165,12 @@ def delete():
     ## Update user info
     query = "update  user_creds.user_table SET container_id = '' , vnc_port = '' , ssh_port = '' , is_container_running = 0 where username = '"+user+"';"
     print(query)
-    cursor.execute(query)
-
+    try:
+      cursor.execute(query)
+      database.commit()
+    except:
+      # Rollback in case there is any error
+      database.rollback()
     return resp
 
 
@@ -206,17 +217,17 @@ def run():
 
         query = "update  user_creds.user_table SET container_id = '"+str(container_id)+"' , vnc_port = '"+str(vnc_port)+"' , ssh_port = '"+str(ssh_port)+"' , is_container_running = 1 where username = '"+user+"';"
         print(query)
-        cursor.execute(query)
+        try:
+          cursor.execute(query)
+          database.commit()
+        except:
+          # Rollback in case there is any error
+          database.rollback()
         print(request.form['data'])
         writeFile(user, request.form['data'])
         execute_code(user,projectname)
         return resp
 
-@app.route('/getLog', methods=["POST"])
-def getLog():
-    user = request.cookies['userID']
-    loglines = get_last_log(user)
-    return loglines
 
 @app.route('/getcontainerLog', methods=["POST"])
 def getLog():
