@@ -6,6 +6,18 @@ $(document).ready(function(){
     var link= document.getElementById('vnc_frame_src'); 
     link.href = url
 
+        $.ajax({
+            type: "POST",
+            url: "/getsavedfile",
+            success: function(response) {
+                $('#file').append(response);
+                //dumpLogs();
+            }
+        });
+    
+
+ 
+
     $("#save").click(function() {
         var code = $("#file").val();
         var data = {'data': code};
@@ -31,9 +43,31 @@ $(document).ready(function(){
             data: data,
             success: function(response) {
                 loadFrame();
+                console.log(response)
+                $.ajax({
+            type: "POST",
+            url: "/getcontainerLog",
+            success: function(response) {
+                $('#log').append(response);
+                //dumpLogs();
+            }
+        });
+
             },
             error: function(response) {
                 loadFrame();
+                $.ajax({
+            type: "POST",
+            url: "/getcontainerLog",
+            success: function(response) {
+                $('#log').html("");
+                $('#log').append(response);
+                //dumpLogs();
+            }
+        });
+       
+
+
             }
         });
     })
@@ -86,7 +120,7 @@ $(document).ready(function(){
     
     $("#clear").click(function() {
         $('#log').html("");
-    });
+   }) 
 })
 
 function loadFrame() {
@@ -96,7 +130,7 @@ function loadFrame() {
     console.log(url)
     var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
     link.href = url
-    window.open(url, '_blank');
+    //window.open(url, '_blank');
  
     var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));
     var ssh_port = !!ssh_port_cookie ? ssh_port_cookie[1] : null;

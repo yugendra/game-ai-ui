@@ -10,6 +10,7 @@ from time import sleep
 from log_reader import LogReader
 from threading import Thread
 from get_last_log import get_last_log
+from get_saved_file import get_saved_file
 
 from flask import Flask, url_for, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
@@ -38,17 +39,19 @@ def home():
         else:
                 if request.method == 'POST':
                         print("=====================section 2 ========================")
-                        username = getname(request.form['username'])
-                        return render_template('index.html', data=getfollowedby(username))
+                        return render_template('playArea.html')
                 print("=====================section 3 ========================")
-                return render_template('index.html')
+                return render_template('playArea.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
         """Login Form"""
         if request.method == 'GET':
+             if not session.get('logged_in'):
                 return render_template('login.html')
+             else:
+                return render_template('playArea.html')
         else:
                 name = request.form['username']
                 passw = request.form['password']
@@ -98,6 +101,21 @@ def register():
 def logout():
         """Logout Form"""
         session['logged_in'] = False
+        user = request.cookies['userID']
+        print(user)
+        if is_env_running(user):
+             print("env already running!")
+             remove_env(user)
+        query = "update  user_creds.user_table SET container_id = '' , vnc_port = '' , ssh_port = '' , is_container_running = 0 where username = '"+user+"';"
+        print(query)
+        try:
+          cursor.execute(query)
+          database.commit()
+        except:
+             # Rollback in case there is any error
+             database.rollback()
+
+        #writeFile(user, request.form['data'])
         return redirect(url_for('home'))
 
 
@@ -235,6 +253,12 @@ def getLog():
     loglines = get_last_log(user)
     return loglines
 
+
+@app.route('/getsavedfile', methods=["POST"])
+def getsavedfile():
+    user = request.cookies['userID']
+    loglines = get_saved_file(user)
+    return loglines
 
 @socketio.on('connect', namespace='/getlogs')
 def connect():
