@@ -3,7 +3,6 @@ import os
 def get_saved_file(user, lines=20):
     script_dir = os.path.dirname(os.path.realpath(__file__))
     saved_file = script_dir + '/user_agents/' + user + '/rdata/script.R'
-
     try:
         f = open(saved_file)
     except:
@@ -36,5 +35,5 @@ def get_saved_file(user, lines=20):
     return '\n</br>'.join(all_read_text.splitlines()[-total_lines_wanted:])
 
 #with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
-#fl=get_last_log('user1')
-#print(fl)
+fl=get_saved_file('user3')
+print(fl)

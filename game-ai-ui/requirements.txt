@@ -6,3 +6,5 @@ docker-pycreds==0.2.2
 psutil
 gevent-websocket
 eventlet
+mysqlclient
+#sudo apt-get build-dep python-mysqldb

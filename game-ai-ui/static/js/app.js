@@ -15,7 +15,15 @@ $(document).ready(function(){
             }
         });
     
+     $(function () {
+    $('#projectname input[type=radio]').change(function(){
+      alert ( "Please save your file or remove previous container to launch new project" )
+      if ( $(this).val() == "pacman" )
+          $('#log').html("If previous container is running Please remove it first to launch new pacman game.");
+          $('#file').html("Packman code can be found on the given link        >>> git clone https://github.com/golucky5/pacman.git");
 
+      })
+    }) ;
  
 
     $("#save").click(function() {
@@ -42,7 +50,8 @@ $(document).ready(function(){
             dataType: 'json',
             data: data,
             success: function(response) {
-                loadFrame();
+                console.log(projectname)
+                loadFrame(projectname);
                 console.log(response)
                 $.ajax({
             type: "POST",
@@ -55,7 +64,8 @@ $(document).ready(function(){
 
             },
             error: function(response) {
-                loadFrame();
+                console.log(projectname)
+                loadFrame(projectname);
                 $.ajax({
             type: "POST",
             url: "/getcontainerLog",
@@ -123,21 +133,32 @@ $(document).ready(function(){
    }) 
 })
 
-function loadFrame() {
+function loadFrame(projectname) {
+    console.log(projectname)
     var vnc_port_cookie = document.cookie.match(new RegExp('vnc_port=([^;]+)'));
     var port = !!vnc_port_cookie ? vnc_port_cookie[1] : null;
-    url = 'http://' + document.domain + ':' + port + '/vnc_auto.html'
+    if (projectname == "R") {   
+       console.log("R url")
+       url = 'http://' + document.domain + ':' + port + '/vnc_auto.html'
+    }
+    else if (projectname == "pacman") {
+       console.log("pacman url")
+       url = 'http://' + document.domain + ':' + port
+    }
     console.log(url)
     var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
     link.href = url
-    //window.open(url, '_blank');
- 
+    if (projectname == "pacman"){
+         window.open(url, '_blank');
+    }
     var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));
     var ssh_port = !!ssh_port_cookie ? ssh_port_cookie[1] : null;
     console.log(ssh_port)
     
-    var command= document.getElementById('ssh_command');
-    command.innerHTML = "ssh -p " + ssh_port + " root@" + document.domain
+    if (projectname  == "R"){
+          var command= document.getElementById('ssh_command');
+          command.innerHTML = "ssh -p " + ssh_port + " root@" + document.domain
+    }
     //document.getElementById('vnc_frame').src = url
 }
 

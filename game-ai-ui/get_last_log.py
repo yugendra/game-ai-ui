@@ -1,9 +1,8 @@
 import os
 
-def get_last_log(user, lines=20):
+def get_last_log(user,lines=20):
     script_dir = os.path.dirname(os.path.realpath(__file__))
     log_file = script_dir + '/user_agents/' + user + '/rdata/exec.log'
-
     try:
         f = open(log_file)
     except:

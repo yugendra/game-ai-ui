@@ -23,7 +23,7 @@ socketio = SocketIO(app)
 
 database = MySQLdb.connect(host = "localhost", 
 	user = "root",
-	passwd = "devops123", 
+	passwd = "root", 
 	db = "user_creds", 
 	cursorclass = MySQLdb.cursors.DictCursor)
 cursor = database.cursor()
@@ -218,8 +218,9 @@ def run():
     if is_env_running(user):
         print("env already running!")
         #remove_env(user)
-        writeFile(user, request.form['data'])
-        execute_code(user,projectname)
+        if projectname == "R":
+           writeFile(user, request.form['data'])
+           execute_code(user,projectname)
         resp = make_response(render_template('playArea.html'))
         return resp
     else:
@@ -241,9 +242,10 @@ def run():
         except:
           # Rollback in case there is any error
           database.rollback()
-        print(request.form['data'])
-        writeFile(user, request.form['data'])
-        execute_code(user,projectname)
+        if projectname == "R":
+           print(request.form['data'])
+           writeFile(user, request.form['data'])
+           execute_code(user,projectname)
         return resp
 
 
@@ -258,6 +260,7 @@ def getLog():
 def getsavedfile():
     user = request.cookies['userID']
     loglines = get_saved_file(user)
+    print(loglines)
     return loglines
 
 @socketio.on('connect', namespace='/getlogs')

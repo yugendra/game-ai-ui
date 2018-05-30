@@ -9,7 +9,37 @@ def create_env(user,projectname):
 
     if not vnc_port or not info_channel:
         return False
+    if projectname == "R":
+        return  run_r(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
+    if projectname == "pacman":
+        return  run_pacman(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
+def run_pacman(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
+    try:
+        client = docker.APIClient(base_url='unix://var/run/docker.sock')
+        env_image = 'golucky5/pacman:latest'
+        language = "python3"
+        volume1 = script_dir + '/user_agents/' + user + '/pacman'
+        #cmd = [ "/bin/sh", "-c","service ssh start && tail -F /root/projectdata/agent_log" ]
+        host_config = client.create_host_config(
+            port_bindings={
+               
+                22   : ssh_port,
+                80   : vnc_port,
+            },
+            privileged=True,
+            ipc_mode='host',
+            auto_remove=True
+        )
+      
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[22,80], host_config=host_config)
+        print(container_id['Id'])
+        client.start(container_id['Id'])
+        print("cnt lanched")
+        return vnc_port, info_channel, ssh_port, container_id['Id']
+    except:
+        return False, False, False, False
 
+def run_r(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         env_image = 'yugendra/ssh'
@@ -96,4 +126,3 @@ def get_host_ssh_port(user):
         return client.inspect_container(user)['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
     except:
         return "0"
-
