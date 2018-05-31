@@ -49,7 +49,33 @@ def run_antivirus(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
         client = docker.APIClient(base_url='unix://var/run/docker.sock')
         env_image = 'antivirus:latest'
         language = "python3"
-        volume1 = script_dir + '/user_agents/' + user + '/antivirus-userdata'
+        volume1 = script_dir + '/user_agents/' + user + '/antivirus/'
+        print(volume1)
+
+        volumes= [ script_dir + '/user_agents/' + user + '/antivirus/' ]
+        volume_bindings = {
+                    script_dir + '/user_agents/' + user + '/antivirus/': {
+                        'bind': '/home/ubuntu/antivirus',
+                        'mode': 'rw',
+                    },
+        } 
+
+        host_config = client.create_host_config(
+            binds=volume_bindings,
+            port_bindings={
+
+                22   : ssh_port,
+                8888   : vnc_port,
+            },
+            privileged=True,
+            ipc_mode='host',
+            auto_remove=True
+
+        )
+
+
+
+        '''       
         #cmd = [ "/bin/sh", "-c","service ssh start && tail -F /root/projectdata/agent_log" ]
         host_config = client.create_host_config(
             port_bindings={
@@ -62,11 +88,11 @@ def run_antivirus(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
             auto_remove=True
         )
         binds=[
-                volume1  + ':/home/ubuntu/antivirus/antivirus-userdata',
+                volume1  + ':/home/ubuntu/',
             ]
+        '''
 
-
-        container_id = client.create_container(env_image, name=user, detach=True, ports=[22,8888], host_config=host_config,volumes=['/home/ubuntu/antivirus/antivirus-userdata'])
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[22,8888], host_config=host_config,volumes=volumes,)
         print(container_id['Id'])
         client.start(container_id['Id'])
         print("cnt lanched")
@@ -162,3 +188,4 @@ def get_host_ssh_port(user):
         return client.inspect_container(user)['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
     except:
         return "0"
+#create_env("user5","antivirus")
