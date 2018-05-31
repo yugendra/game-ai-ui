@@ -22,10 +22,16 @@ $(document).ready(function(){
           $('#log').html("If previous container is running Please remove it first to launch new pacman game.");
           $('#file').html("Pacman code can be found on the given link        >>> git clone https://github.com/golucky5/pacman.git");}
       else if ( $(this).val() == "antivirus" ){
-          $('#log').html("If previous container is running Please remove it first to launch new pacman game.");
+          $('#log').html("If previous container is running Please remove it first to launch antivirus project.");
           $('#file').html("Go to jupyter notebook to modify code.");
 
       }
+      else if ( $(this).val() == "speechrecognition" ){
+          $('#log').html("If previous container is running Please remove it first to launch speechrecognition project.");
+          $('#file').html("Go to jupyter notebook to modify code.");
+
+      }
+
 
       })
     }) ;
@@ -153,6 +159,11 @@ function loadFrame(projectname) {
        console.log("antivirus url")
        url = 'http://' + document.domain + ':' + port + '/tree?'
     }
+    else if (projectname == "speechrecognition") {
+       console.log("speechrecognition url")
+       url = 'http://' + document.domain + ':' + port + '/tree?'
+    }
+
 
     console.log(url)
     var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
@@ -160,6 +171,8 @@ function loadFrame(projectname) {
     if (projectname == "pacman"){
          window.open(url, '_blank');}
     if (projectname == "antivirus"){
+         window.open(url, '_blank');}
+    if (projectname == "speechrecognition"){
          window.open(url, '_blank');}
 
     var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));
