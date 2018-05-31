@@ -31,6 +31,17 @@ $(document).ready(function(){
           $('#file').html("Go to jupyter notebook to modify code.");
 
       }
+      else if ( $(this).val() == "composer" ){
+          $('#log').html("If previous container is running Please remove it first to launch composer project.");
+          $('#file').html("Go to jupyter notebook to modify code.");
+
+      }
+      else if ( $(this).val() == "stockprediction" ){
+          $('#log').html("If previous container is running Please remove it first to launch stock_prediction project.");
+          $('#file').html("Go to jupyter notebook to modify code.");
+
+      }
+
 
 
       })
@@ -163,6 +174,14 @@ function loadFrame(projectname) {
        console.log("speechrecognition url")
        url = 'http://' + document.domain + ':' + port + '/tree?'
     }
+    else if (projectname == "composer") {
+       console.log("composer url")
+       url = 'http://' + document.domain + ':' + port + '/tree?'
+    }
+    else if (projectname == "stockprediction") {
+       console.log("stockprediction url")
+       url = 'http://' + document.domain + ':' + port + '/tree?'
+    }
 
 
     console.log(url)
@@ -173,6 +192,10 @@ function loadFrame(projectname) {
     if (projectname == "antivirus"){
          window.open(url, '_blank');}
     if (projectname == "speechrecognition"){
+         window.open(url, '_blank');}
+    if (projectname == "composer"){
+         window.open(url, '_blank');}
+    if (projectname == "stockprediction"){
          window.open(url, '_blank');}
 
     var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));

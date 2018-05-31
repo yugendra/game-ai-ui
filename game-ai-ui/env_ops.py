@@ -17,6 +17,87 @@ def create_env(user,projectname):
         return  run_antivirus(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
     if projectname == "speechrecognition":
         return  run_speechrecognition(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
+    if projectname == "composer":
+        return  run_composer(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
+    if projectname == "stockprediction":
+        return  run_stockprediction(user,projectname,vnc_port,ssh_port,script_dir,info_channel)
+
+#################################### stockprediction ##############################################
+def run_stockprediction(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
+    try:
+        client = docker.APIClient(base_url='unix://var/run/docker.sock')
+        env_image = 'stockprediction:latest'
+        language = "python3"
+        volume1 = script_dir + '/user_agents/' + user + '/stock_prediction/'
+        print(volume1)
+
+        volumes= [ script_dir + '/user_agents/' + user + '/stock_prediction/' ]
+        volume_bindings = {
+                    script_dir + '/user_agents/' + user + '/stock_prediction/': {
+                        'bind': '/home/ubuntu/stock_prediction',
+                        'mode': 'rw',
+                    },
+        }
+
+        host_config = client.create_host_config(
+            binds=volume_bindings,
+            port_bindings={
+
+                22   : ssh_port,
+                8888   : vnc_port,
+            },
+            privileged=True,
+            ipc_mode='host',
+            auto_remove=True
+
+        )
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[22,8888], host_config=host_config,volumes=volumes,)
+        print(container_id['Id'])
+        client.start(container_id['Id'])
+        print("cnt lanched")
+        return vnc_port, info_channel, ssh_port, container_id['Id']
+    except:
+        return False, False, False, False
+
+
+#################################### Composer ##############################################
+def run_composer(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
+    try:
+        client = docker.APIClient(base_url='unix://var/run/docker.sock')
+        env_image = 'composer:latest'
+        language = "python3"
+        volume1 = script_dir + '/user_agents/' + user + '/composer/'
+        print(volume1)
+
+        volumes= [ script_dir + '/user_agents/' + user + '/composer/' ]
+        volume_bindings = {
+                    script_dir + '/user_agents/' + user + '/composer/': {
+                        'bind': '/home/ubuntu/composer',
+                        'mode': 'rw',
+                    },
+        }
+
+        host_config = client.create_host_config(
+            binds=volume_bindings,
+            port_bindings={
+
+                22   : ssh_port,
+                8888   : vnc_port,
+            },
+            privileged=True,
+            ipc_mode='host',
+            auto_remove=True
+
+        )
+        container_id = client.create_container(env_image, name=user, detach=True, ports=[22,8888], host_config=host_config,volumes=volumes,)
+        print(container_id['Id'])
+        client.start(container_id['Id'])
+        print("cnt lanched")
+        return vnc_port, info_channel, ssh_port, container_id['Id']
+    except:
+        return False, False, False, False
+
+
 #################################### speechrecognition ##############################################
 def run_speechrecognition(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
     try:
