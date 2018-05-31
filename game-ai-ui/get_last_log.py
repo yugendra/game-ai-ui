@@ -35,5 +35,5 @@ def get_last_log(user,lines=20):
     return '\n</br>'.join(all_read_text.splitlines()[-total_lines_wanted:])
 
 #with open("/opt/game-ai-ui/game-ai-ui/user_agents/user1/agent_log") as f:
-#fl=get_last_log('user1')
-#print(fl)
+fl=get_last_log('user5')
+print(fl)
