@@ -11,8 +11,6 @@ body{
     border: none!important;
     border-color: transparent!important;
 }
-
-
 .section{
     padding: 3px!important;
 }
@@ -45,7 +43,6 @@ body{
 .learn{
     height: 640px!important;
     background-color: #ffffff;!important;
-    color: b;
 }
 .script{
     background-color: #364451;!important;
@@ -59,17 +56,14 @@ body{
 .jumbotron{
     padding: 10px !important;
 }
-
 .vnc_frame{
     display: block;
     width: 100%;
     height: 600px;
 }
-
 .container{
     width: 100% !important;
 }
-
 .log_container{
     border:1px solid black;
     padding-top:5px;
