@@ -8,43 +8,99 @@
     <link rel="stylesheet" href="static/css/app.css">
 </head>
 <body>
-    <div class="jumbotron">
-        <h1>ML Platform</h1>
-    </div>
-    <div class="container">
-    <div class ="col-md-4">
-        <div id="projectname">
-               <input type="radio" name="projectname" value="R" checked="checked"> R programming<br>
-               <input type="radio" name="projectname" value="antivirus"> Antivirus Demo<br>
-               <input type="radio" name="projectname" value="speechrecognition"> Speech Recognition<br>
-               <input type="radio" name="projectname" value="composer"> Composer<br>
-               <input type="radio" name="projectname" value="stockprediction"> Stock Prediction<br>
-               <input type="radio" name="projectname" value="pacman"> Play Pacman<br>
-
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">ML Platform</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+    {#      <ul class="nav navbar-nav">#}
+    {#        <li class="active"><a href="#">Home</a></li>#}
+    {#        <li class="dropdown">#}
+    {#          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>#}
+    {#          <ul class="dropdown-menu">#}
+    {#            <li><a href="#">Page 1-1</a></li>#}
+    {#            <li><a href="#">Page 1-2</a></li>#}
+    {#            <li><a href="#">Page 1-3</a></li>#}
+    {#          </ul>#}
+    {#        </li>#}
+    {#        <li><a href="#">Page 2</a></li>#}
+    {#        <li><a href="#">Page 3</a></li>#}
+    {#      </ul>#}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          </ul>
         </div>
+        </div>
+    </nav>
+    <div class="container col-md-12">
+        <div class="col-md-3 section" style="margin-left: 50px; margin-right: 20px">
+            <div class="panel_custom learn form-group">
+                <div class="content-box-header">
+                    <div class="panel-learn center-custom">
+                        <p><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;&nbsp; Learn</p>
+                    </div>
+                </div>
+                <div class="topic_panel">
+	                <p>Sed sit amet diam ipsum. Praesent in pellentesque diam, sit amet dignissim erat. Aliquam erat volutpat.
+                        <br/><br/></p>
+                </div>
+                <div class="content-box-header">
+                    <div class="panel-learn center-custom">
+                        <p>Option</p>
+                    </div>
+                </div>
+                <div class="form-group option_panel">
+                    <div id="projectname">
+                       <input type="radio" name="projectname" value="R" checked="checked"> R programming<br>
+                       <input type="radio" name="projectname" value="antivirus"> Antivirus Demo<br>
+                       <input type="radio" name="projectname" value="speechrecognition"> Speech Recognition<br>
+                       <input type="radio" name="projectname" value="composer"> Composer<br>
+                       <input type="radio" name="projectname" value="stockprediction"> Stock Prediction<br>
+                       <input type="radio" name="projectname" value="pacman"> Play Pacman<br>
+                    </div>
+                    <div>
+                        <p>
+                            <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
+                        </p>
+                        <p id="ssh_command">
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <div><button class="btn btn-primary btn-md" type="button" id='save'>Save</button> </div></br>
+                        <div><button class="btn btn-danger" type="button" id='delete'>Remove</button></div></br>
+                        <div><button class="btn btn-danger" type="button" id='clear'>Clear</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 section">
+            <div class="content-box-header">
+                <div class="panel-title center-custom">
+                    <p><span class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;&nbsp; Script</p>
+                </div>
+            </div>
+            <div class="panel_custom script form-group">
+                <textarea class="textarea form-control script" id='file'></textarea>
+                <div class="content-box-header">
+                <div class="panel-title center-custom btn_custom">
+                    <button class="btn btn-success btn-md" type="button" id='run'>Run</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-4 section">
+            <div class="panel_custom result form-group">
+                <textarea class="textarea form-control result" id='log'></textarea>
+            </div>
         <div>
-            <p>
-                <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
-            </p>
-            <p id="ssh_command">
-
-            </p>
-        </div>
-
-        <textarea class="textarea" id='file'></textarea>
     </div>
-    <div class ="col-md-1">
-        <div><button type="button" id='save'>Save</button> </div></br>
-        <div><button type="button" id='run'>Run</button></div></br>
-        <div><button type="button" id='delete'>Remove</button></div></br>
-    </div>
-    <div class ="col-md-7">
-        <a href="/logout">Logout</a> <br> <br>
-          
-        <textarea class="textarea" id='log'></textarea>
-        <div><button type="button" id='clear'>Clear</button></div>
-
-    </div>
+</div>
     </div>
 </body>
 </html>

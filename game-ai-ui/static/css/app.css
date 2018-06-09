@@ -1,22 +1,69 @@
-.textarea{
-    height: 800px;
-    width: 100%;
+body{
+    background-color: #132a3c!important;
 }
-
+.navbar-brand{
+    color: white!important;
+}
+.textarea{
+    height: 560px!important;
+    width: 100%!important;
+    background: transparent;
+    border: none!important;
+    border-color: transparent!important;
+}
+.section{
+    padding: 3px!important;
+}
+.panel_custom{
+    background: #ffffff;
+}
+.panel-title{
+    color:#9E9E9E!important;
+    height: 40px;
+    background-color: #2a2e37;
+}
+.panel-learn{
+    color:#254762!important;
+    height: 40px;
+    background-color: #d4d5d7;
+}
+.center-custom p{
+    font-size: 15px;
+    padding: 10px;
+}
+.topic_panel{
+    height: 150px;
+    padding: 20px;
+}
+.option_panel{
+    height: 410px;
+    padding: 20px;
+    background-color: #feeeee;
+}
+.learn{
+    height: 640px!important;
+    background-color: #ffffff;!important;
+}
+.script{
+    background-color: #364451;!important;
+    color: #ff877b;
+}
+.result{
+    height: 640px!important;
+    background-color: #0f0f0f;!important;
+    color: white;
+}
 .jumbotron{
     padding: 10px !important;
 }
-
 .vnc_frame{
     display: block;
     width: 100%;
-    height: 800px;
+    height: 600px;
 }
-
 .container{
     width: 100% !important;
 }
-
 .log_container{
     border:1px solid black;
     padding-top:5px;
@@ -25,4 +72,10 @@
     padding-bottom:5px;
     height: 400px;
     overflow-y: auto;
+}
+.btn{
+    height:30px!important;
+}
+.btn_custom{
+    padding: 5px!important;
 }
