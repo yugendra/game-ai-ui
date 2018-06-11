@@ -15,6 +15,9 @@ from get_saved_file import get_saved_file
 from flask import Flask, url_for, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from instagram import getfollowedby, getname
+import os
+import video.video as v
+
 
 app = Flask(__name__)
 
@@ -23,10 +26,11 @@ socketio = SocketIO(app)
 
 database = MySQLdb.connect(host = "localhost", 
 	user = "root",
-	passwd = "root", 
+	passwd = "",
 	db = "user_creds", 
 	cursorclass = MySQLdb.cursors.DictCursor)
 cursor = database.cursor()
+
 
 
 
@@ -281,8 +285,28 @@ def disconnect():
     #TODO: detect if client is closed
     print('Client disconnected')
 
+@app.route('/video/<video_name>')
+def video(video_name):
+    if video_name == 'R':
+        video_name = 'video1.mp4'
+    elif video_name == 'antivirus':
+        video_name = 'video2.mp4'
+    elif video_name == 'speechrecognition':
+        video_name = 'video3.mp4'
+    elif video_name == 'composer':
+        video_name = 'video1.mp4'
+    elif video_name == 'stockprediction':
+        video_name = 'video2.mp4'
+    elif video_name == 'pacman':
+        video_name = 'video3.mp4'
+
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    path = script_dir + '/static/videos/' + video_name
+
+    start, end = v.get_range(request)
+    return v.partial_response(path, start, end)
+
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = "123"
     socketio.run(app, host='0.0.0.0',debug=True)
-

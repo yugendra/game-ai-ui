@@ -102,3 +102,4 @@ ENV/
 
 #ignore user envs
 game-ai-ui/user_agents/*
+game-ai-ui/static/videos/*

@@ -19,19 +19,6 @@
               <a class="navbar-brand" href="#">ML Platform</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
-    {#      <ul class="nav navbar-nav">#}
-    {#        <li class="active"><a href="#">Home</a></li>#}
-    {#        <li class="dropdown">#}
-    {#          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>#}
-    {#          <ul class="dropdown-menu">#}
-    {#            <li><a href="#">Page 1-1</a></li>#}
-    {#            <li><a href="#">Page 1-2</a></li>#}
-    {#            <li><a href="#">Page 1-3</a></li>#}
-    {#          </ul>#}
-    {#        </li>#}
-    {#        <li><a href="#">Page 2</a></li>#}
-    {#        <li><a href="#">Page 3</a></li>#}
-    {#      </ul>#}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
           </ul>
@@ -41,15 +28,6 @@
     <div class="container col-md-12">
         <div class="col-md-3 section" style="margin-left: 50px; margin-right: 20px">
             <div class="panel_custom learn form-group">
-                <div class="content-box-header">
-                    <div class="panel-learn center-custom">
-                        <p><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;&nbsp; Learn</p>
-                    </div>
-                </div>
-                <div class="topic_panel">
-	                <p>Sed sit amet diam ipsum. Praesent in pellentesque diam, sit amet dignissim erat. Aliquam erat volutpat.
-                        <br/><br/></p>
-                </div>
                 <div class="content-box-header">
                     <div class="panel-learn center-custom">
                         <p>Option</p>
@@ -72,7 +50,7 @@
                         </p>
                     </div>
                     <div class="form-group">
-                        <div><button class="btn btn-primary btn-md" type="button" id='save'>Save</button> </div></br>
+                        <div><button class="btn btn-success btn-md" type="button" id='save'>Run</button> </div></br>
                         <div><button class="btn btn-danger" type="button" id='delete'>Remove</button></div></br>
                         <div><button class="btn btn-danger" type="button" id='clear'>Clear</button></div>
                     </div>
@@ -87,11 +65,14 @@
             </div>
             <div class="panel_custom script form-group">
                 <textarea class="textarea form-control script" id='file'></textarea>
-                <div class="content-box-header">
-                <div class="panel-title center-custom btn_custom">
-                    <button class="btn btn-success btn-md" type="button" id='run'>Run</button>
+                <div class="video_custom">
+                    <video id="videoplayer" name="videoplayer" value="videoplayer" width="100%" height="100%" controls></video>
                 </div>
-            </div>
+                <div class="content-box-header">
+                    <div class="panel-title center-custom btn_custom">
+                        <button class="btn btn-success btn-md" type="button" name="play" id="play" value="play" onclick="playVideo()">Play</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-4 section">

@@ -8,3 +8,4 @@ gevent-websocket
 eventlet
 mysqlclient
 #sudo apt-get build-dep python-mysqldb
+tornado==5.0.2

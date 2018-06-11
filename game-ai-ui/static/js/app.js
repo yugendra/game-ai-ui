@@ -221,6 +221,18 @@ function loadFrameAfterDelete() {
 
 }
 
+function playVideo() {
+    var video_name = $("input[name=projectname]:checked").val();
+    var video_folder = '/video/';
+    var video_path = video_folder.concat(video_name);
+    console.log(video_path);
+
+    var videoplayer = document.getElementById('videoplayer');
+
+    videoplayer.src = video_path;
+    videoplayer.play();
+}
+
 function dumpLogs() {
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/getlogs');
     var user_name_cookie = document.cookie.match(new RegExp('userID=([^;]+)'));

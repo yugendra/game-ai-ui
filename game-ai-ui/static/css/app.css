@@ -5,11 +5,16 @@ body{
     color: white!important;
 }
 .textarea{
-    height: 560px!important;
+    height: 300px!important;
     width: 100%!important;
     background: transparent;
     border: none!important;
     border-color: transparent!important;
+}
+.video_custom {
+    background-color: #0f0f0f;
+    height: 260px!important;
+    width: 100%!important;
 }
 .section{
     padding: 3px!important;
@@ -36,7 +41,7 @@ body{
     padding: 20px;
 }
 .option_panel{
-    height: 410px;
+    height: 600px!important;
     padding: 20px;
     background-color: #feeeee;
 }
