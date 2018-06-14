@@ -1,7 +1,7 @@
 import MySQLdb
 import MySQLdb.cursors
 from flask import Flask, render_template, request, make_response, jsonify, Response
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO,emit
 from fileOps import readFile, writeFile, runFile, createUserEnv
 from env_ops import create_env, remove_env, is_env_running, get_env_list, remove_env_in_bulk, get_vnc_port, get_host_ssh_port, execute_code
 from subprocess import Popen
@@ -18,16 +18,21 @@ from instagram import getfollowedby, getname
 import os
 import video.video as v
 
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
+from FileTree import FileTree
+
 
 app = Flask(__name__)
 
 socketio = SocketIO(app)
 #log_thread = Thread()
 
-database = MySQLdb.connect(host = "localhost", 
+database = MySQLdb.connect(host = "localhost",
 	user = "root",
-	passwd = "",
-	db = "user_creds", 
+	passwd = ":)day@lifE",
+	db = "user_creds",
 	cursorclass = MySQLdb.cursors.DictCursor)
 cursor = database.cursor()
 
@@ -63,7 +68,7 @@ def login():
                         cursor.execute("SELECT password FROM user_creds.user_table WHERE username = '"+name+"';")
                         data = cursor.fetchall()
                         print(data[0]['password'])
-                        
+
                         if data is not None and data[0]['password'] == passw:
                                 session['logged_in'] = True
                                 user = request.form['username']
@@ -196,12 +201,13 @@ def delete():
     return resp
 
 
-    
+
 
 @app.route('/run', methods=["POST"])
 def run():
     projectname=request.form['projectname']
     print(projectname)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
     print("reading cookies...."+str(request.cookies['userID']))
     try:
         user = request.cookies['userID']
@@ -218,13 +224,17 @@ def run():
         pid = None
 
     #if is_agent_running(pid): stop_agent(pid)
-    
+
     if is_env_running(user):
         print("env already running!")
         #remove_env(user)
         if projectname == "R":
-           writeFile(user, request.form['data'])
-           execute_code(user,projectname)
+           #writeFile(user, request.form['data'])
+           #execute_code(user,projectname)
+           #DJ CODE
+           ob = FileTree()
+           content = ob.traverse(script_dir + '/user_agents/'+user+'/rdata/')
+           socketio.emit('showscript_response', {'content': content},namespace='/script_exec')
         resp = make_response(render_template('playArea.html'))
         return resp
     else:
@@ -248,8 +258,12 @@ def run():
           database.rollback()
         if projectname == "R":
            print(request.form['data'])
-           writeFile(user, request.form['data'])
-           execute_code(user,projectname)
+           # writeFile(user, request.form['data'])
+           # execute_code(user,projectname)
+           #DJ CODE
+           ob = FileTree()
+           content = ob.traverse(script_dir + '/user_agents/'+user+'/rdata/')
+           socketio.emit('showscript_response', {'content': content},namespace='/script_exec')
         return resp
 
 
@@ -305,6 +319,38 @@ def video(video_name):
 
     start, end = v.get_range(request)
     return v.partial_response(path, start, end)
+
+
+'''
+DJ Code 15 June 2018
+'''
+@socketio.on('connect', namespace='/script_exec')
+def connect():
+    user = request.cookies['userID']
+    print "Client connected for script execution"
+
+@socketio.on('showscript_event', namespace='/script_exec')
+def showContent(fullpath):
+    print fullpath
+    if os.path.isfile(fullpath):
+        oFile = open(fullpath,"r")
+        message =""
+        with oFile as fin:
+            message += fin.read()
+        message = highlight(message, PythonLexer(), HtmlFormatter())
+        socketio.emit('scriptcontent_response', {'data': message,'filePath':fullpath},namespace='/script_exec')
+
+@socketio.on('runscript_event', namespace='/script_exec')
+def execScript(data):
+    filePath = data['filePath']
+    projectname = data['projectname']
+    user = request.cookies['userID']
+    script_dir = os.path.dirname(os.path.realpath(__file__))+os.sep+"user_agents"+os.sep+user
+    filePath = filePath.replace(script_dir,'')
+    if projectname=='R':
+        filePath = filePath.replace('/rdata/','')
+    execute_code(user,projectname,filePath)
+#DJ CODE ENDS
 
 if __name__ == '__main__':
     app.debug = True

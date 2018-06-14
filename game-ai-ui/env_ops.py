@@ -146,7 +146,7 @@ def run_pacman(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
         #cmd = [ "/bin/sh", "-c","service ssh start && tail -F /root/projectdata/agent_log" ]
         host_config = client.create_host_config(
             port_bindings={
-               
+
                 22   : ssh_port,
                 80   : vnc_port,
             },
@@ -154,7 +154,7 @@ def run_pacman(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
             ipc_mode='host',
             auto_remove=True
         )
-      
+
         container_id = client.create_container(env_image, name=user, detach=True, ports=[22,80], host_config=host_config)
         print(container_id['Id'])
         client.start(container_id['Id'])
@@ -177,7 +177,7 @@ def run_antivirus(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
                         'bind': '/home/ubuntu/antivirus',
                         'mode': 'rw',
                     },
-        } 
+        }
 
         host_config = client.create_host_config(
             binds=volume_bindings,
@@ -194,7 +194,7 @@ def run_antivirus(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
 
 
 
-        '''       
+        '''
         #cmd = [ "/bin/sh", "-c","service ssh start && tail -F /root/projectdata/agent_log" ]
         host_config = client.create_host_config(
             port_bindings={
@@ -232,7 +232,7 @@ def run_r(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
             volume1 = script_dir + '/user_agents/' + user + '/moviereviewdata'
         if projectname == 'antivirus':
             volume1 = script_dir + '/user_agents/' + user + '/antivirusdata'
-        volume2 = script_dir + '/DeepLearningMovies/' 
+        volume2 = script_dir + '/DeepLearningMovies/'
         host_config = client.create_host_config(
             port_bindings={
                 6081 : vnc_port,
@@ -254,13 +254,13 @@ def run_r(user,projectname,vnc_port,ssh_port,script_dir,info_channel):
     except:
         return False, False, False, False
 
-def execute_code( user, projectname):
+def execute_code( user, projectname,filePath=""):
      try:
        if projectname == "R":
-           os.system('docker exec -ti '+user+' /bin/bash -c "Rscript /root/projectdata/script.R &> /root/projectdata/exec.log"')
+           os.system('docker exec -ti '+user+' /bin/bash -c "Rscript /root/projectdata/'+filePath+' &> /root/projectdata/exec.log"')
      except:
         return False
-          
+
 def remove_env(user):
     try:
         client = docker.APIClient(base_url='unix://var/run/docker.sock')

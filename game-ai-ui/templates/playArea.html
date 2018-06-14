@@ -4,8 +4,11 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="static/js/app.js"></script>
+    <script src= "{{ url_for('static',filename='jstree/dist/jstree.min.js') }}"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='jstree/dist/themes/default/style.min.css') }}">
     <link rel="stylesheet" href="static/css/app.css">
+    <title>ML Platform</title>
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -35,12 +38,12 @@
                 </div>
                 <div class="form-group option_panel">
                     <div id="projectname">
-                       <input type="radio" name="projectname" value="R" checked="checked"> R programming<br>
-                       <input type="radio" name="projectname" value="antivirus"> Antivirus Demo<br>
-                       <input type="radio" name="projectname" value="speechrecognition"> Speech Recognition<br>
-                       <input type="radio" name="projectname" value="composer"> Composer<br>
-                       <input type="radio" name="projectname" value="stockprediction"> Stock Prediction<br>
-                       <input type="radio" name="projectname" value="pacman"> Play Pacman<br>
+                       <input type="radio" name="projectname" value="R" checked="checked"><label> R programming</label><br>
+                       <input type="radio" name="projectname" value="antivirus"> <label>Antivirus Demo</label><br>
+                       <input type="radio" name="projectname" value="speechrecognition"><label> Speech Recognition</label><br>
+                       <input type="radio" name="projectname" value="composer"><label> Composer</label><br>
+                       <input type="radio" name="projectname" value="stockprediction"> <label>Stock Prediction</label><br>
+                       <input type="radio" name="projectname" value="pacman"> <label>Play Pacman</label><br>
                     </div>
                     <div>
                         <p>
@@ -50,7 +53,7 @@
                         </p>
                     </div>
                     <div class="form-group">
-                        <div><button class="btn btn-success btn-md" type="button" id='save'>Run</button> </div></br>
+                        <div><button class="btn btn-success btn-md" type="button" id='run'>Run</button> </div></br>
                         <div><button class="btn btn-danger" type="button" id='delete'>Remove</button></div></br>
                         <div><button class="btn btn-danger" type="button" id='clear'>Clear</button></div>
                     </div>
@@ -64,7 +67,11 @@
                 </div>
             </div>
             <div class="panel_custom script form-group">
-                <textarea class="textarea form-control script" id='file'></textarea>
+                <!-- <textarea class="textarea form-control script" id='file'></textarea> -->
+                <div contenteditable="true" class="script" id="file"></div>
+                <div class="pull-right">
+                <button type="button" class="btn-primary btn-xs btn hidden" disabled="" id="save">Save Script</button>&nbsp;<button type="button" id="run_btn_script" class="hidden btn btn-primary btn-xs">Run Script</button></div>
+                <div class="clearfix"></div>
                 <div class="video_custom">
                     <video id="videoplayer" name="videoplayer" value="videoplayer" width="100%" height="100%" controls></video>
                 </div>
@@ -82,6 +89,15 @@
         <div>
     </div>
 </div>
+    </div>
+
+    <div id="files_div" style="border: 1px solid black;display: none">
+        <input type="hidden" id="filePath" value="" />
+        <input type="hidden" id="fileExecutable" value="1" />
+        <div class="">
+            <h6>Container File System for Script Execution</h6>
+        </div>
+        <div id="filetree"></div>
     </div>
 </body>
 </html>
