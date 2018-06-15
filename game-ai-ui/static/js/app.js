@@ -3,7 +3,7 @@ $(document).ready(function(){
     //loadFrame()
     //dumpLogs()
     url = 'http://' + document.domain + ':' + location.port + '/nocontainer'
-    var link= document.getElementById('vnc_frame_src'); 
+    var link= document.getElementById('vnc_frame_src');
     link.href = url
 
         $.ajax({
@@ -14,7 +14,7 @@ $(document).ready(function(){
                 //dumpLogs();
             }
         });
-    
+
     $(function () {
     $('#projectname input[type=radio]').change(function(){
       alert ( "Please save your file or remove previous container to launch new project" )
@@ -47,12 +47,13 @@ $(document).ready(function(){
       })
     }) ;
 
- 
+
 
     $("#save").click(function() {
-        var code = $("#file").val();
+        var code = $("#file").text();
         var data = {'data': code};
-        console.log(data)
+        console.log(data);
+        jQuery('#run_btn_script').attr('disabled',false);
         $.ajax({
         type: "POST",
         url: "/saveFile",
@@ -61,7 +62,7 @@ $(document).ready(function(){
         encode: true
       });
     });
-    
+
     $("#run").click(function() {
         var code = $("#file").val();
         var projectname=   $("input[name='projectname']:checked").val();
@@ -96,7 +97,7 @@ $(document).ready(function(){
                 //dumpLogs();
             }
         });
-       
+
 
 
             }
@@ -132,7 +133,7 @@ $(document).ready(function(){
             }
         });
     })
-    
+
     $("#user1").click(function() {
         var data = {'user': 'user1'}
         $.ajax({
@@ -148,10 +149,53 @@ $(document).ready(function(){
             },
         });
     });
-    
+
     $("#clear").click(function() {
         $('#log').html("");
-   }) 
+   }) ;
+
+
+
+    //DJ Code for
+    //enableTab('file');
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/script_exec');
+    socket.on('showscript_response', function(response) {
+      jQuery('input:radio[name=projectname]:checked').siblings('label').after(jQuery('#files_div'));
+      jQuery('#filetree').html(response.content);
+      jQuery("#filetree").jstree().bind("select_node.jstree", function (e, data) {
+        jQuery('#fileExecutable').val(data.node.data.executable);
+        socket.emit('showscript_event',data.node.data.path);
+      });
+      jQuery('#files_div').show();
+
+    });
+    socket.on('scriptcontent_response', function(msg) {
+        jQuery('#file').html(msg.data);
+        jQuery('#run_btn_script').addClass('hidden');
+        //if(jQuery('#fileExecutable').val()==1){
+            jQuery('#run_btn_script').removeClass('hidden');
+            jQuery('#run_btn_script').text('Run Script');
+            jQuery('#run_btn_script').data('filepath',msg.filePath);
+            jQuery('#save').removeClass('hidden');
+        //}
+        jQuery('#filePath').val(msg.filePath);
+    });
+    jQuery(document).on('click','#run_btn_script',function(){
+        socket.emit('runscript_event',{'filePath':jQuery('#filePath').val(),'projectname':jQuery('input:radio[name=projectname]:checked').val()});
+        //jQuery('#run_btn_script').text('Running...');
+       //dumpLogs();
+    });
+    socket.on('contentlog_response',function(response){
+      jQuery('#log').html(response.content);
+    })
+    $(document).on('DOMSubtreeModified','#file', function() {
+      if(!jQuery('#run_btn_script').hasClass('hidden')){
+        jQuery('#run_btn_script').attr('disabled',true);
+        jQuery('#save').attr('disabled',false);
+      }
+    });
+
+    //DJ END 15 June 2018
 })
 
 function loadFrame(projectname) {
@@ -239,7 +283,7 @@ function dumpLogs() {
     var user_name = !!user_name_cookie ? user_name_cookie[1] : null;
     socket.on(user_name, function(line_received) {
         line_print = '<p>' + line_received + '<p>';
-        $('#log').append(line_print);
+        $('#log').append(line_print);alert(line_print);
         document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
     });
 }
