@@ -180,11 +180,14 @@ $(document).ready(function(){
         //}
         jQuery('#filePath').val(msg.filePath);
     });
-
     jQuery(document).on('click','#run_btn_script',function(){
         socket.emit('runscript_event',{'filePath':jQuery('#filePath').val(),'projectname':jQuery('input:radio[name=projectname]:checked').val()});
         //jQuery('#run_btn_script').text('Running...');
+       //dumpLogs();
     });
+    socket.on('contentlog_response',function(response){
+      jQuery('#log').html(response.content);
+    })
     $(document).on('DOMSubtreeModified','#file', function() {
       if(!jQuery('#run_btn_script').hasClass('hidden')){
         jQuery('#run_btn_script').attr('disabled',true);
@@ -280,7 +283,7 @@ function dumpLogs() {
     var user_name = !!user_name_cookie ? user_name_cookie[1] : null;
     socket.on(user_name, function(line_received) {
         line_print = '<p>' + line_received + '<p>';
-        $('#log').append(line_print);
+        $('#log').append(line_print);alert(line_print);
         document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
     });
 }

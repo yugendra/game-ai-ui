@@ -31,7 +31,7 @@ socketio = SocketIO(app)
 
 database = MySQLdb.connect(host = "localhost",
 	user = "root",
-	passwd = ":)day@lifE",
+	passwd = "",
 	db = "user_creds",
 	cursorclass = MySQLdb.cursors.DictCursor)
 cursor = database.cursor()
@@ -350,6 +350,7 @@ def execScript(data):
     if projectname=='R':
         filePath = filePath.replace('/rdata/','')
     execute_code(user,projectname,filePath)
+    socketio.emit('contentlog_response',{'content':readFile(user,filePath)},namespace='/script_exec')
 #DJ CODE ENDS
 
 if __name__ == '__main__':
