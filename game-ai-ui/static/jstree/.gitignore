@@ -7,8 +7,6 @@
 /nuget
 /demo/filebrowser/data/root
 /npm.txt
-/libs
 /docs
-/dist/libs
 /.vscode
 /.idea
