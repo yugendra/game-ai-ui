@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='jstree/dist/themes/default/style.min.css') }}">
     <link rel="stylesheet" href="static/css/app.css">
+    <link rel="stylesheet" href="static/css/tabs.css">
+    <link rel="stylesheet" href="static/css/accordion.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <title>ML Platform</title>
 </head>
 <body>
@@ -28,7 +32,9 @@
         </div>
         </div>
     </nav>
+
     <div class="container col-md-12">
+        <!-- option section -->
         <div class="col-md-3 section" style="margin-left: 50px; margin-right: 20px">
             <div class="panel_custom learn form-group">
                 <div class="content-box-header">
@@ -37,54 +43,90 @@
                     </div>
                 </div>
                 <div class="form-group option_panel">
-                    <div id="projectname">
-                       <input type="radio" name="projectname" value="R" checked="checked"><label> R programming</label><br>
-                       <input type="radio" name="projectname" value="antivirus"> <label>Antivirus Demo</label><br>
-                       <input type="radio" name="projectname" value="speechrecognition"><label> Speech Recognition</label><br>
-                       <input type="radio" name="projectname" value="composer"><label> Composer</label><br>
-                       <input type="radio" name="projectname" value="stockprediction"> <label>Stock Prediction</label><br>
-                       <input type="radio" name="projectname" value="pacman"> <label>Play Pacman</label><br>
+                    <div class="options_custom" id="projectname">
+                        <input type="radio" name="projectname" value="R" checked="checked"><label> R programming</label><br>
+                        <input type="radio" name="projectname" value="antivirus"> <label>Antivirus Demo</label><br>
+                        <input type="radio" name="projectname" value="speechrecognition"><label> Speech Recognition</label><br>
+                        <input type="radio" name="projectname" value="composer"><label> Composer</label><br>
+                        <input type="radio" name="projectname" value="stockprediction"> <label>Stock Prediction</label><br>
+                        <input type="radio" name="projectname" value="pacman"> <label>Play Pacman</label><br>
+                        <div>
+                            <p>
+                                <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
+                            </p>
+                            <p id="ssh_command">
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p>
-                            <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
-                        </p>
-                        <p id="ssh_command">
-                        </p>
+                    <div class="video_custom">
+                       <video id="videoplayer" name="videoplayer" value="videoplayer" width="100%" height="100%" controls></video>
                     </div>
-                    <div class="form-group">
-                        <div><button class="btn btn-success btn-md" type="button" id='run'>Run</button> </div></br>
-                        <div><button class="btn btn-danger" type="button" id='delete'>Remove</button></div></br>
-                        <div><button class="btn btn-danger" type="button" id='clear'>Clear</button></div>
+                    <div class="btn_custom">
+                        <div>
+                            <button class="btn btn-success btn-md" type="button" name="play" id="play" value="play" onclick="playVideo()">Play</button>
+                        </div></br>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- script section -->
         <div class="col-md-4 section">
-            <div class="content-box-header">
-                <div class="panel-title center-custom">
-                    <p><span class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;&nbsp; Script</p>
-                </div>
-            </div>
-            <div class="panel_custom script form-group">
-                <!-- <textarea class="textarea form-control script" id='file'></textarea> -->
-                <div contenteditable="true" class="script" id="file"></div>
-                <div class="pull-right">
-                <button type="button" class="btn-primary btn-xs btn hidden" disabled="" id="save">Save Script</button>&nbsp;<button type="button" id="run_btn_script" class="hidden btn btn-primary btn-xs">Run Script</button></div>
-                <div class="clearfix"></div>
-                <div class="video_custom">
-                    <video id="videoplayer" name="videoplayer" value="videoplayer" width="100%" height="100%" controls></video>
-                </div>
-                <div class="content-box-header">
-                    <div class="panel-title center-custom btn_custom">
-                        <button class="btn btn-success btn-md" type="button" name="play" id="play" value="play" onclick="playVideo()">Play</button>
+            <div id="exTab3" class="container">
+                <ul  class="nav nav-pills">
+                    <li class="active">
+                        <a  href="#1b" data-toggle="tab">Script</a>
+                    </li>
+                    <li>
+                        <a href="#2b" data-toggle="tab">Directory</a>
+                    </li>
+                </ul>
+                <div class="tab-content clearfix">
+                    <!-- script tab -->
+                    <div class="tab-pane active" id="1b">
+                       <div class="">
+                            <div contenteditable="true" class="script"  id="file"></div>
+                            <div class="pull-right">
+                            <button type="button" class="btn-primary btn-xs btn hidden" disabled="" id="save">Save Script</button>&nbsp;<button type="button" id="run_btn_script" class="hidden btn btn-primary btn-xs">Run Script</button></div>
+                            <div class="content-box-header">
+                                <div class="panel-title center-custom btn_custom">
+                                    <button class="btn btn-success btn-md" type="button" id='run'>Run</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- file directory tab -->
+                    <div class="tab-pane" id="2b">
+                        <div class="directory_custom">
+                            <h3></h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- output section -->
         <div class="col-md-4 section">
             <div class="panel_custom result form-group">
-                <textarea class="textarea form-control result" id='log'></textarea>
+                <ul class="a-container">
+                    <!-- result-->
+                    <li class="a-items">
+                        <input type="radio" class="accordion_radio" name="ac" id="a1" />
+                        <label for="a1">Result</label>
+                        <div class="a-content">
+                            <textarea class="textarea form-control" id='log'></textarea>
+                        </div>
+                    </li>
+                    <!-- item02 -->
+                    <li class="a-items">
+                        <input type="radio" class="accordion_radio" name="ac" id="a2" />
+                        <label for="a2">Our Services</label>
+                        <div class="a-content">
+                            <h3>Design</h3>
+                            <p>Lorem ipsum dolor sit amet, quidem ad necessitatibus fugiat consectetur veritatis laboriosam ut soluta quis deleniti deserunt! Voluptate qui excepturi architecto.</p>
+                            <h3>Development</h3>
+                            <p>Lorem ipsum dolor sit amet, quidem ad necessitatibus fugiat consectetur veritatis laboriosam ut soluta quis deleniti deserunt! Voluptate qui excepturi architecto.</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         <div>
     </div>

@@ -5,7 +5,8 @@ body{
     color: white!important;
 }
 .textarea{
-    height: 300px!important;
+    height: 500px!important;
+    color: white;
     width: 100%!important;
     background: transparent;
     border: none!important;
@@ -42,19 +43,28 @@ body{
 }
 .option_panel{
     height: 600px!important;
-    padding: 20px;
     background-color: #feeeee;
+}
+.options_custom{
+    padding: 20px;
 }
 .learn{
     height: 640px!important;
     background-color: #ffffff;!important;
 }
 .script{
-    background-color: #364451;!important;
+    padding: 15px;
     color: #ff877b;
+    height: 560px!important;
+}
+.directory_custom {
+    height: 580px!important;
+}
+.textarea_custom {
+    height: 560px;
 }
 .result{
-    height: 640px!important;
+    height: 600px!important;
     background-color: #0f0f0f;!important;
     color: white;
 }
