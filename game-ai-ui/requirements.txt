@@ -10,3 +10,7 @@ mysqlclient
 #sudo apt-get build-dep python-mysqldb
 tornado==5.0.2
 pygments
+mysql-python
+flask_sqlalchem
+
+

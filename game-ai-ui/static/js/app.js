@@ -64,6 +64,18 @@ $(document).ready(function(){
     });
 
     $("#run").click(function() {
+        var code = $("#file").text();
+        var data = {'data': code};
+        console.log(data);
+        jQuery('#run_btn_script').attr('disabled',false);
+        $.ajax({
+        type: "POST",
+        url: "/saveFile",
+        dataType: 'json',
+        data: data,
+        encode: true
+        });
+
         var code = $("#file").val();
         var projectname=   $("input[name='projectname']:checked").val();
         var data = {'projectname': projectname, 'data': code };
@@ -227,20 +239,20 @@ function loadFrame(projectname) {
        url = 'http://' + document.domain + ':' + port + '/tree?'
     }
 
-
+    url = 'https://google.com';
     console.log(url)
     var link= document.getElementById('vnc_frame_src'); //or grab it by tagname etc
     link.href = url
     if (projectname == "pacman"){
-         window.open(url, '_blank');}
+         window.open(url, 'myiframe');}
     if (projectname == "antivirus"){
-         window.open(url, '_blank');}
+         window.open(url, 'myiframe');}
     if (projectname == "speechrecognition"){
-         window.open(url, '_blank');}
+         window.open(url, 'myiframe');}
     if (projectname == "composer"){
-         window.open(url, '_blank');}
+         window.open(url, 'myiframe');}
     if (projectname == "stockprediction"){
-         window.open(url, '_blank');}
+         window.open(url, 'myiframe');}
 
     var ssh_port_cookie = document.cookie.match(new RegExp('ssh_port=([^;]+)'));
     var ssh_port = !!ssh_port_cookie ? ssh_port_cookie[1] : null;
