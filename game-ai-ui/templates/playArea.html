@@ -52,7 +52,7 @@
                         <input type="radio" name="projectname" value="pacman"> <label>Play Pacman</label><br>
                         <div>
                             <p>
-                                <a href="" target="_blank" class="button" id="vnc_frame_src">Go to Console</a>
+                                <a href="" target="myiframe" class="button" id="vnc_frame_src">Go to Console</a>
                             </p>
                             <p id="ssh_command">
                             </p>
@@ -84,9 +84,12 @@
                     <!-- script tab -->
                     <div class="tab-pane active" id="1b">
                        <div class="">
-                            <div contenteditable="true" class="script"  id="file"></div>
-                            <div class="pull-right">
-                            <button type="button" class="btn-primary btn-xs btn hidden" disabled="" id="save">Save Script</button>&nbsp;<button type="button" id="run_btn_script" class="hidden btn btn-primary btn-xs">Run Script</button></div>
+                            <div>
+                                <div contenteditable="true" class="script" id="file"></div>
+                            </div>
+{#                            <div class="pull-right">#}
+{#                                <button type="button" class="btn-primary btn-xs btn hidden" disabled="" id="save">Save Script</button>&nbsp;<button type="button" id="run_btn_script" class="hidden btn btn-primary btn-xs">Run Script</button>#}
+{#                            </div>#}
                             <div class="content-box-header">
                                 <div class="panel-title center-custom btn_custom">
                                     <button class="btn btn-success btn-md" type="button" id='run'>Run</button>
@@ -97,7 +100,14 @@
                     <!-- file directory tab -->
                     <div class="tab-pane" id="2b">
                         <div class="directory_custom">
-                            <h3></h3>
+                            <div id="files_div" style="border: 1px solid black;display: none">
+                                <input type="hidden" id="filePath" value="" />
+                                <input type="hidden" id="fileExecutable" value="1" />
+                                <div class="">
+                                    <h6>Container File System for Script Execution</h6>
+                                </div>
+                                <div id="filetree"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,39 +117,27 @@
         <div class="col-md-4 section">
             <div class="panel_custom result form-group">
                 <ul class="a-container">
+                    <!-- item02 -->
+                    <li class="a-items">
+                        <input type="radio" class="accordion_radio" name="ac" id="a2" />
+                        <label for="a2">Console</label>
+                        <div class="a-content">
+                             <iframe src="demo_iframe.htm" name="myiframe" class="ifram_custome" style="border:none; background-color: white"></iframe>
+                        </div>
+                    </li>
+
                     <!-- result-->
                     <li class="a-items">
                         <input type="radio" class="accordion_radio" name="ac" id="a1" />
-                        <label for="a1">Result</label>
+                        <label for="a1">Output</label>
                         <div class="a-content">
                             <textarea class="textarea form-control" id='log'></textarea>
                         </div>
                     </li>
-                    <!-- item02 -->
-                    <li class="a-items">
-                        <input type="radio" class="accordion_radio" name="ac" id="a2" />
-                        <label for="a2">Our Services</label>
-                        <div class="a-content">
-                            <h3>Design</h3>
-                            <p>Lorem ipsum dolor sit amet, quidem ad necessitatibus fugiat consectetur veritatis laboriosam ut soluta quis deleniti deserunt! Voluptate qui excepturi architecto.</p>
-                            <h3>Development</h3>
-                            <p>Lorem ipsum dolor sit amet, quidem ad necessitatibus fugiat consectetur veritatis laboriosam ut soluta quis deleniti deserunt! Voluptate qui excepturi architecto.</p>
-                        </div>
-                    </li>
                 </ul>
             </div>
-        <div>
     </div>
 </div>
-    </div>
 
-    <div id="files_div" style="border: 1px solid black;display: none">
-        <input type="hidden" id="filePath" value="" />
-        <input type="hidden" id="fileExecutable" value="1" />
-        <div class="">
-            <h6>Container File System for Script Execution</h6>
-        </div>
-        <div id="filetree"></div>
-    </div>
 </body>
 </html>
