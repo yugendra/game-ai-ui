@@ -11,6 +11,6 @@ mysqlclient
 tornado==5.0.2
 pygments
 mysql-python
-flask_sqlalchem
+flask_sqlalchemy
 
 
