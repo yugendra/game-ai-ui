@@ -111,6 +111,6 @@ universe==0.21.3
 urllib3==1.22
 virtualenv==15.1.0
 websocket-client==0.46.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 zope.interface==4.4.3
 
