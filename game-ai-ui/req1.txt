@@ -1,4 +1,4 @@
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==15.1.0
 websocket-client==0.46.0
 Werkzeug==0.14.1
